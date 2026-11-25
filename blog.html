@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog — sabanefebenzil.dev | Şaban Efe Benzil</title>
+    <meta name="description" content="Şaban Efe Benzil (@sabanefebenzil) — SolidWorks, Fiber Lazer CNC, Donanım Modifikasyonu, Android ROM ve Mühendislik Yazıları.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cormorant+Garamond:wght@400;600&family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Open+Sans:wght@300;400;600&family=UnifrakturMaguntia&family=Work+Sans:wght@200;300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=6">
+</head>
+<body data-theme="harmony">
+
+    <div id="bg-static" aria-hidden="true"></div>
+    <canvas id="theme-canvas" aria-hidden="true"></canvas>
+
+    <!-- Lale Devri Osmanlı İznik Çini & Lale Motifi SVG Deseni -->
+    <div id="lale-svg-overlay" aria-hidden="true">
+        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <pattern id="iznik-lale-pattern" width="120" height="120" patternUnits="userSpaceOnUse">
+                    <path d="M60 12 L108 60 L60 108 L12 60 Z" fill="none" stroke="rgba(212,175,55,0.16)" stroke-width="1"/>
+                    <circle cx="60" cy="60" r="36" fill="none" stroke="rgba(248,241,225,0.08)" stroke-width="1"/>
+                    <path d="M60 32 C54 42 48 50 51 62 C53 69 57 73 60 75 C63 73 67 69 69 62 C72 50 66 42 60 32 Z" fill="rgba(140,28,36,0.22)" stroke="rgba(212,175,55,0.34)" stroke-width="1"/>
+                    <path d="M60 39 C57 48 56 58 60 72 C64 58 63 48 60 39 Z" fill="rgba(212,175,55,0.16)"/>
+                    <path d="M60 75 L60 92 M60 84 C52 80 47 73 45 66 M60 84 C68 80 73 73 75 66" fill="none" stroke="rgba(212,175,55,0.28)" stroke-width="1.1"/>
+                    <path d="M0 0 L10 0 L0 10 Z M120 0 L110 0 L120 10 Z M0 120 L10 120 L0 110 Z M120 120 L110 120 L120 110 Z" fill="rgba(212,175,55,0.18)"/>
+                </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#iznik-lale-pattern)"/>
+        </svg>
+    </div>
+
+    <div class="aero-sheen" aria-hidden="true"></div>
+    <div id="subpage-veil" class="active" aria-hidden="true"></div>
+
+    <button type="button" class="charms-handle" onclick="openCharms('theme')" title="Windows 8 Charms Bar (Alt+C)" aria-label="Charms Bar Aç">CHARMS</button>
+    <div id="metro-toast-stack" aria-live="polite" aria-atomic="true"></div>
+
+    <div id="app-shell">
+        <main class="subpage-wrap metro-enter" aria-label="Blog Sayfası">
+            <div class="row-between flex-wrap" style="margin-bottom:14px;">
+                <div class="row-center" style="gap:12px;">
+                    <button type="button" class="win-backbutton" onclick="handleBlogBack()" title="Ana sayfaya dön / Home (Esc)" aria-label="Geri dön">←</button>
+                    <div class="metro-micro">
+                        <a href="index.html" style="color:var(--text-secondary);">SABANEFEBENZIL</a>
+                        <span style="margin:0 5px;opacity:0.45;">/</span>
+                        <span id="blog-breadcrumb" style="color:var(--text-primary);">BLOG</span>
+                    </div>
+                </div>
+                <div class="top-quick-bar">
+                    <button type="button" class="metro-bar-btn" onclick="cycleTheme()" title="Tema değiştir">
+                        <span id="blog-theme-label">Harmony</span>
+                    </button>
+                    <button type="button" class="metro-bar-btn" id="blog-lowend-btn" onclick="toggleLowEndMode()" title="Performans modu">
+                        <span id="blog-lowend-label">⚡ Standart</span>
+                    </button>
+                    <button type="button" class="metro-bar-btn" id="blog-lang-btn" onclick="toggleLanguage()" title="Dil değiştir / Switch language">
+                        <span id="blog-lang-label">🌐 TR</span>
+                    </button>
+                    <button type="button" class="metro-bar-btn" onclick="openCharms('theme')" title="Charms Bar (Alt+C)">
+                        <span>Charms</span><span class="kbd-chip">Alt+C</span>
+                    </button>
+                </div>
+            </div>
+
+            <nav class="pivot-bar" id="pivot-bar" aria-label="Bölümler">
+                <a href="blog.html" class="pivot-tab active" aria-current="page" data-i18n="navBlog">blog</a>
+                <a href="index.html#projects" class="pivot-tab" data-i18n="navProjects">projeler</a>
+                <a href="index.html#games" class="pivot-tab" data-i18n="navGames">oyunlar</a>
+                <a href="index.html#about" class="pivot-tab" data-i18n="navAbout">hakkımda</a>
+                <a href="index.html#setup" class="pivot-tab" data-i18n="navSetup">setup</a>
+                <a href="index.html#hadis" class="pivot-tab" data-i18n="navHadis">40 hadis</a>
+                <a href="index.html#sysinfo" class="pivot-tab" data-i18n="navSysinfo">sistem &amp; ip</a>
+                <a href="index.html#toolkit" class="pivot-tab" data-i18n="navToolkit">format &amp; iso</a>
+                <a href="index.html#android" class="pivot-tab" data-i18n="navAndroid">android &amp; adb</a>
+                <a href="index.html#evcharge" class="pivot-tab" data-i18n="navEv">ev şarj</a>
+                <a href="index.html#contact" class="pivot-tab" data-i18n="navContact">iletişim</a>
+            </nav>
+
+            <!-- Kategori Filtreleri & Arama -->
+            <div class="row-between flex-wrap" style="gap:12px;margin-bottom:16px;">
+                <div class="filter-row" id="blog-category-filters" style="margin-bottom:0;"></div>
+                <div class="row-center" style="gap:8px;flex:1;max-width:300px;min-width:210px;">
+                    <input type="search" id="blog-search-input" class="metro-input" placeholder="Yazılarda ara..." aria-label="Blog yazılarında ara">
+                </div>
+            </div>
+
+            <!-- Blog Yazı Listesi -->
+            <section id="blog-list-container" aria-label="Blog Yazıları"></section>
+        </main>
+    </div>
+
+    <!-- TAM EKRAN MAKALE OKUYUCU -->
+    <div id="blog-reader-overlay" class="blog-reader-overlay hidden" role="dialog" aria-modal="true" aria-label="Makale Okuyucu">
+        <div class="blog-reader-shell metro-enter" id="blog-reader-body"></div>
+    </div>
+
+    <!-- WINDOWS 8 CHARMS BAR -->
+    <div id="charms-backdrop" onclick="closeCharms()"></div>
+    <aside id="charms-drawer" aria-label="Charms Bar" aria-hidden="true">
+        <div class="charms-rail">
+            <button type="button" class="charm-rail-btn active" data-charm="theme" onclick="switchCharmTab('theme')"><span>🎨</span><span data-i18n="charmTheme">Tema</span></button>
+            <button type="button" class="charm-rail-btn" data-charm="perf" onclick="switchCharmTab('perf')"><span>⚡</span><span data-i18n="charmPerf">Hız</span></button>
+            <button type="button" class="charm-rail-btn" data-charm="nav" onclick="switchCharmTab('nav')"><span>⊞</span><span data-i18n="charmNav">Gezin</span></button>
+        </div>
+        <div class="charms-pane">
+            <div class="row-between" style="margin-bottom:16px;">
+                <h2 class="metro-display" id="charms-title" style="font-size:1.52rem;">Tema &amp; Vurgu</h2>
+                <button type="button" class="win-circle-btn sm" onclick="closeCharms()" aria-label="Kapat">✕</button>
+            </div>
+            <div id="charms-body" style="flex:1;"></div>
+        </div>
+    </aside>
+
+    <script src="data.js?v=6"></script>
+    <script src="blog.js?v=6"></script>
+</body>
+</html>

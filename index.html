@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>sabanefebenzil.dev — Şaban Efe Benzil | Metro UI &amp; Frutiger Aero</title>
+    <meta name="description" content="Şaban Efe Benzil (@sabanefebenzil) — Erciyes Üniversitesi Makine Mühendisliği, SolidWorks CAD & Bodor Fiber Lazer CNC Uzmanı, Donanım Modifikasyonu ve @nptechtr.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cormorant+Garamond:wght@400;600&family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Open+Sans:wght@300;400;600&family=UnifrakturMaguntia&family=Work+Sans:wght@200;300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=6">
+</head>
+<body data-theme="harmony">
+
+    <div id="bg-static" aria-hidden="true"></div>
+    <canvas id="theme-canvas" aria-hidden="true"></canvas>
+
+    <!-- Lale Devri Osmanlı İznik Çini & Lale Motifi SVG Deseni -->
+    <div id="lale-svg-overlay" aria-hidden="true">
+        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <pattern id="iznik-lale-pattern" width="120" height="120" patternUnits="userSpaceOnUse">
+                    <path d="M60 12 L108 60 L60 108 L12 60 Z" fill="none" stroke="rgba(212,175,55,0.16)" stroke-width="1"/>
+                    <circle cx="60" cy="60" r="36" fill="none" stroke="rgba(248,241,225,0.08)" stroke-width="1"/>
+                    <path d="M60 32 C54 42 48 50 51 62 C53 69 57 73 60 75 C63 73 67 69 69 62 C72 50 66 42 60 32 Z" fill="rgba(140,28,36,0.22)" stroke="rgba(212,175,55,0.34)" stroke-width="1"/>
+                    <path d="M60 39 C57 48 56 58 60 72 C64 58 63 48 60 39 Z" fill="rgba(212,175,55,0.16)"/>
+                    <path d="M60 75 L60 92 M60 84 C52 80 47 73 45 66 M60 84 C68 80 73 73 75 66" fill="none" stroke="rgba(212,175,55,0.28)" stroke-width="1.1"/>
+                    <path d="M0 0 L10 0 L0 10 Z M120 0 L110 0 L120 10 Z M0 120 L10 120 L0 110 Z M120 120 L110 120 L120 110 Z" fill="rgba(212,175,55,0.18)"/>
+                </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#iznik-lale-pattern)"/>
+        </svg>
+    </div>
+
+    <div class="aero-sheen" aria-hidden="true"></div>
+    <div id="subpage-veil" aria-hidden="true"></div>
+
+    <button type="button" class="charms-handle" onclick="openCharms('theme')" title="Windows 8 Charms Bar (Alt+C)" aria-label="Charms Bar Aç">CHARMS</button>
+    <div id="metro-toast-stack" aria-live="polite" aria-atomic="true"></div>
+
+    <div id="app-shell">
+        <!-- ANA SAYFA: METRO START HUB -->
+        <main id="home-view" class="container metro-enter">
+            <header class="hub-header">
+                <div class="brand-lockup">
+                    <button type="button" class="avatar-square" onclick="navigateTo('about')" title="Hakkımda">
+                        <div id="home-avatar-slot" style="width:100%;height:100%;"></div>
+                    </button>
+                    <div class="min-w-0">
+                        <h1 class="metro-display site-title truncate" id="site-title-el">sabanefebenzil<span class="domain-tld">.dev</span></h1>
+                        <p class="site-subtitle" id="site-subtitle-el">3D CAD &amp; Fiber Lazer CNC Uzmanı, Donanım Modifikasyonu &amp; @nptechtr İçerik Üreticisi</p>
+                    </div>
+                </div>
+
+                <div class="top-quick-bar">
+                    <div class="metro-bar-btn" style="cursor:default;font-family:var(--font-mono);" title="Kayseri (UTC+3)">
+                        <span id="top-clock-text">--:--:--</span>
+                    </div>
+                    <button type="button" class="metro-bar-btn" onclick="fetchKayseriWeather(true)" title="Kayseri hava durumunu yenile">
+                        <span class="status-dot" aria-hidden="true"></span>
+                        <span id="weather-pill-text">Kayseri · --°C</span>
+                    </button>
+                    <button type="button" class="metro-bar-btn" onclick="openSearchCharm()" title="Ctrl+K">
+                        <span data-i18n="topSearch">Ara</span><span class="kbd-chip">Ctrl+K</span>
+                    </button>
+                    <button type="button" class="metro-bar-btn" onclick="cycleTheme()" title="Tema değiştir">
+                        <span id="theme-pill-text">Harmony</span>
+                    </button>
+                    <button type="button" class="metro-bar-btn" id="lowend-top-btn" onclick="toggleLowEndMode()" title="Performans modu">
+                        <span id="lowend-pill-text">⚡ Standart</span>
+                    </button>
+                    <button type="button" class="metro-bar-btn" id="lang-top-btn" onclick="toggleLanguage()" title="Dil değiştir / Switch language">
+                        <span id="lang-pill-text">🌐 TR</span>
+                    </button>
+                    <button type="button" class="metro-bar-btn" onclick="openCharms('theme')" title="Charms Bar (Alt+C)">
+                        <span>Charms</span><span class="kbd-chip">Alt+C</span>
+                    </button>
+                </div>
+            </header>
+
+            <div class="hub-grid">
+                <!-- SOL SÜTUN -->
+                <section aria-label="Hakkımda, Hızlı Erişim ve Sosyal Ağlar">
+                    <h2 class="metro-section-head">whoami</h2>
+                    <div class="whoami-panel" id="whoami-bio-box"></div>
+
+                    <h2 class="metro-section-head">jump to...</h2>
+                    <div class="jump-grid">
+                        <a href="blog.html" class="metro-tile tile-accent tile-sq" data-metro-tilt>
+                            <span class="tile-big-num" id="tile-count-blog">3</span>
+                            <span class="tile-footer-label"><span data-i18n="navBlog">blog</span><span class="corner-badge" data-i18n="badgeBlog">yazı</span></span>
+                        </a>
+                        <button type="button" class="metro-tile tile-accent tile-sq" data-metro-tilt onclick="navigateTo('projects')">
+                            <span class="tile-big-num" id="tile-count-projects">4</span>
+                            <span class="tile-footer-label"><span data-i18n="navProjects">projeler</span><span class="corner-badge" data-i18n="badgeProjects">işler</span></span>
+                        </button>
+                        <button type="button" class="metro-tile tile-accent-deep tile-sq" data-metro-tilt onclick="navigateTo('games')">
+                            <span class="tile-big-num" id="tile-count-games">51</span>
+                            <span class="tile-footer-label"><span data-i18n="navGames">oyunlar</span><span class="corner-badge" data-i18n="badgeGames">arcade</span></span>
+                        </button>
+                        <button type="button" class="metro-tile tile-accent-deep tile-sq" data-metro-tilt onclick="navigateTo('about')">
+                            <div class="tile-icon-slot">
+                                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a7 7 0 0 1 14 0v1"/></svg>
+                            </div>
+                            <span class="tile-footer-label"><span data-i18n="navAbout">hakkımda</span></span>
+                        </button>
+                        <button type="button" class="metro-tile tile-slate tile-sq" data-metro-tilt onclick="navigateTo('setup')">
+                            <div class="tile-icon-slot">
+                                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="4" width="20" height="13"/><path d="M8 21h8M12 17v4"/></svg>
+                            </div>
+                            <span class="tile-footer-label"><span data-i18n="navSetup">setup</span><span class="corner-badge" data-i18n="badgeSetup">garaj</span></span>
+                        </button>
+                        <button type="button" class="metro-tile tile-accent-deep tile-sq" data-metro-tilt onclick="navigateTo('hadis')">
+                            <span class="tile-big-num">40</span>
+                            <span class="tile-footer-label"><span data-i18n="navHadis">40 hadis</span><span class="corner-badge" data-i18n="badgeHadis">günlük</span></span>
+                        </button>
+                        <button type="button" class="metro-tile tile-slate tile-sq" data-metro-tilt onclick="navigateTo('toolkit')">
+                            <div class="tile-icon-slot">
+                                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3v12m0 0-4-4m4 4 4-4"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+                            </div>
+                            <span class="tile-footer-label"><span data-i18n="navToolkit">format &amp; iso</span><span class="corner-badge" data-i18n="badgeToolkit">araç</span></span>
+                        </button>
+                        <button type="button" class="metro-tile tile-accent-deep tile-sq" data-metro-tilt onclick="navigateTo('android')">
+                            <div class="tile-icon-slot">
+                                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="6" y="3" width="12" height="18" rx="2"/><path d="M10 18h4"/><path d="M9 7h6"/></svg>
+                            </div>
+                            <span class="tile-footer-label"><span data-i18n="navAndroid">android &amp; adb</span><span class="corner-badge">rom</span></span>
+                        </button>
+                        <button type="button" class="metro-tile tile-slate tile-sq" data-metro-tilt onclick="navigateTo('evcharge')">
+                            <div class="tile-icon-slot">
+                                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg>
+                            </div>
+                            <span class="tile-footer-label"><span data-i18n="navEv">ev şarj</span><span class="corner-badge">kwh</span></span>
+                        </button>
+                        <button type="button" class="metro-tile tile-accent tile-sq" data-metro-tilt onclick="navigateTo('contact')">
+                            <div class="tile-icon-slot">
+                                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="5" width="20" height="14"/><path d="M2 5.5 12 13l10-7.5"/></svg>
+                            </div>
+                            <span class="tile-footer-label"><span data-i18n="navContact">iletişim</span></span>
+                        </button>
+                    </div>
+
+                    <!-- ZİYARETÇİ SİSTEM BİLGİLERİ & IP CANLI KUTUCUĞU -->
+                    <div class="metro-tile sysinfo-wide-tile" data-metro-tilt onclick="navigateTo('sysinfo')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();navigateTo('sysinfo');}" title="Sistem & IP">
+                        <div class="row-center min-w-0" style="gap:11px;flex:1;">
+                            <div class="sysinfo-icon-box" aria-hidden="true">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="2" y="3" width="20" height="14"/><path d="M8 21h8M12 17v4"/><circle cx="12" cy="10" r="2.5"/></svg>
+                            </div>
+                            <div class="min-w-0" style="flex:1;">
+                                <div class="row-center flex-wrap" style="gap:6px;">
+                                    <span class="metro-micro" style="color:var(--accent-light);" data-i18n="navSysinfo">sistem &amp; ip</span>
+                                    <span class="corner-badge" id="home-sysinfo-ping">-- ms</span>
+                                </div>
+                                <div class="sysinfo-ip-readout" id="home-sysinfo-ip">IP algılanıyor...</div>
+                                <div class="sysinfo-os-readout truncate" id="home-sysinfo-os">Sistem &amp; tarayıcı taranıyor...</div>
+                            </div>
+                        </div>
+                        <div class="row-center" style="gap:6px;flex-shrink:0;">
+                            <button type="button" class="metro-flat-btn xs" onclick="event.stopPropagation();copyVisitorIp()" style="padding:5px 9px;" data-i18n="copyIpBtn">IP Kopyala</button>
+                            <span style="font-size:0.85rem;color:var(--accent-light);font-weight:600;">→</span>
+                        </div>
+                    </div>
+
+                    <div class="row-between" style="margin-bottom:11px;">
+                        <h2 class="metro-section-head" style="margin-bottom:0;" data-i18n="socialHead">sosyal ağlar &amp; steam</h2>
+                        <span class="metro-micro" id="social-count-label">7 hesap</span>
+                    </div>
+                    <div class="social-tiles-grid" id="home-social-grid"></div>
+
+                    <div class="row-between flex-wrap hub-meta-line">
+                        <span>sabanefebenzil.dev · MDL 1.5</span>
+                        <button type="button" class="metro-flat-btn xs" onclick="openAdminModal()" title="Yönetim Paneli (Alt+A)" style="padding:4px 9px;">⚙ Admin (Alt+A)</button>
+                    </div>
+                </section>
+
+                <!-- SAĞ SÜTUN -->
+                <section aria-label="Canlı Kutucuklar">
+                    <div class="row-between" style="margin-bottom:11px;">
+                        <h2 class="metro-section-head" style="margin-bottom:0;">what i'm up to</h2>
+                        <div class="row-center" style="gap:7px;">
+                            <button type="button" class="win-circle-btn" onclick="openCharms('theme')" title="Temalar & Vurgu Rengi" aria-label="Temalar">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3" fill="currentColor"/></svg>
+                            </button>
+                            <button type="button" class="win-circle-btn" onclick="refreshAllLiveTiles()" title="Yenile / Refresh" aria-label="Yenile">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><polyline points="21 3 21 9 15 9"/></svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- SAAT + GÜNÜN HADİSİ -->
+                    <div class="top-live-row">
+                        <article class="metro-tile tile-clock" data-metro-tilt>
+                            <div class="row-between">
+                                <span class="metro-micro" id="clock-greeting">İyi Günler</span>
+                                <span class="source-badge">UTC+3</span>
+                            </div>
+                            <div class="clock-digits">
+                                <span class="clock-hm" id="tile-clock-hm">--:--</span>
+                                <span class="clock-sec" id="tile-clock-sec">:--</span>
+                            </div>
+                            <div>
+                                <div id="tile-clock-date" style="font-size:0.84rem;font-weight:600;">Yükleniyor...</div>
+                                <div id="tile-clock-weather" class="mono-sm" style="color:var(--accent-light);margin-top:2px;">Kayseri · --°C</div>
+                            </div>
+                        </article>
+
+                        <article class="metro-tile tile-hadith" data-metro-tilt>
+                            <div class="row-between flex-wrap">
+                                <div class="row-center" style="gap:6px;">
+                                    <span class="metro-micro" style="color:var(--text-primary);" data-i18n="hadithOfDay">Günün Hadisi</span>
+                                    <span class="source-badge" id="hadith-num-badge">Hadis #1 / 40</span>
+                                </div>
+                                <div class="row-center" style="gap:4px;">
+                                    <button type="button" class="win-circle-btn sm" onclick="stepHadith(-1)" title="Önceki" aria-label="Önceki">‹</button>
+                                    <button type="button" class="win-circle-btn sm" onclick="stepHadith(1)" title="Sonraki" aria-label="Sonraki">›</button>
+                                </div>
+                            </div>
+                            <div id="hadith-tile-body"></div>
+                            <div class="row-between flex-wrap divider-top">
+                                <span class="hadith-source" id="hadith-source-el"></span>
+                                <div class="row-center" style="gap:6px;">
+                                    <button type="button" class="metro-flat-btn xs" id="hadith-today-btn" onclick="resetHadithToToday()" data-i18n="btnToday">Bugün</button>
+                                    <button type="button" class="metro-flat-btn xs" onclick="navigateTo('hadis')" data-i18n="btnAllHadiths">40 Hadis →</button>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+
+                    <!-- KAYSERİ HAVA DURUMU & KIYAFET / ŞEMSİYE ÖNERİ PANELİ -->
+                    <article class="metro-tile tile-weather" id="weather-live-tile" data-metro-tilt>
+                        <div class="row-between flex-wrap" style="margin-bottom:8px;">
+                            <div class="row-center" style="gap:6px;">
+                                <span class="metro-micro" style="color:var(--text-primary);" data-i18n="weatherTitle">Kayseri Hava Durumu</span>
+                                <span class="source-badge" id="weather-mode-badge">Open-Meteo</span>
+                            </div>
+                            <button type="button" class="metro-flat-btn xs" onclick="fetchKayseriWeather(true)" data-i18n="btnRefresh">↻ Yenile</button>
+                        </div>
+
+                        <div class="weather-main-row">
+                            <div class="row-center" style="gap:10px;">
+                                <span class="weather-emoji" id="weather-icon-el" aria-hidden="true">⛅</span>
+                                <span class="metro-display weather-temp-big" id="weather-temp-big">--°C</span>
+                            </div>
+                            <div class="min-w-0" style="flex:1;">
+                                <div id="weather-desc-big" style="font-size:0.9rem;font-weight:600;text-transform:capitalize;">Yükleniyor...</div>
+                                <div id="weather-meta-line" class="mono-sm" style="color:var(--accent-light);margin-top:2px;">Hissedilen --°C · Min/Max --° / --°</div>
+                                <div id="weather-sub-line" class="mono-sm" style="opacity:0.84;margin-top:2px;">Nem --% · Rüzgâr -- km/s · Yağış --%</div>
+                            </div>
+                        </div>
+
+                        <div class="weather-advice-list" id="weather-advice-slot"></div>
+                    </article>
+
+                    <!-- YOUTUBE MUSIC (TAME IMPALA & BERGEN) -->
+                    <article class="metro-tile tile-ytm" data-metro-tilt>
+                        <div class="row-between flex-wrap" style="margin-bottom:9px;">
+                            <div class="row-center" style="font-size:0.78rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;">
+                                <svg width="19" height="19" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#fff"/><polygon points="10,8.5 16,12 10,15.5" fill="#941836"/></svg>
+                                <span>YouTube Music</span>
+                            </div>
+                            <div class="row-center flex-wrap" style="gap:6px;">
+                                <button type="button" class="metro-flat-btn" id="ytm-embed-toggle" onclick="toggleYtmEmbed()">Oynat</button>
+                                <a id="ytm-open-link" href="https://music.youtube.com" target="_blank" rel="noopener noreferrer" class="metro-flat-btn">YT Music ↗</a>
+                            </div>
+                        </div>
+                        <div class="ytm-tabs" id="ytm-tabs"></div>
+                        <div style="margin-bottom:9px;">
+                            <h3 class="metro-display" id="ytm-active-title" style="font-size:1.42rem;">Tame Impala</h3>
+                            <p id="ytm-active-mood" style="font-size:0.81rem;color:rgba(255,255,255,0.86);margin-top:2px;"></p>
+                        </div>
+                        <div class="ytm-strip" id="ytm-strip">
+                            <div class="row-center" style="gap:10px;">
+                                <div class="eq-bars" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+                                <span style="font-size:0.77rem;" id="ytm-hint-text">Dinlemek için <strong>Oynat</strong> düğmesine tıkla.</span>
+                            </div>
+                            <button type="button" class="win-circle-btn sm" onclick="toggleYtmEmbed()" title="Oynat / Play" aria-label="Oynat">▶</button>
+                        </div>
+                        <div class="ytm-embed-wrap hidden" id="ytm-embed-wrap">
+                            <iframe id="ytm-iframe" class="ytm-iframe" title="YouTube Music Oynatıcı" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+                        </div>
+                    </article>
+
+                    <!-- GITHUB CANLI KUTUCUĞU -->
+                    <div class="live-tiles-grid">
+                        <article class="metro-tile tile-gh" data-metro-tilt>
+                            <div class="tile-head">
+                                <div class="tile-head-title">
+                                    <span>GitHub</span>
+                                    <span id="gh-mode-badge" class="source-badge">Yükleniyor</span>
+                                </div>
+                                <a id="gh-profile-link" href="https://github.com/sabanefebenzil" target="_blank" rel="noopener noreferrer" class="win-circle-btn sm" title="GitHub">↗</a>
+                            </div>
+                            <div class="row-center" style="gap:9px;margin-bottom:8px;">
+                                <div class="mini-avatar" id="gh-avatar-slot"></div>
+                                <div class="min-w-0">
+                                    <div id="gh-name-el" style="font-size:0.86rem;font-weight:600;">Şaban Efe Benzil</div>
+                                    <div id="gh-bio-el" class="truncate" style="font-size:0.7rem;opacity:0.84;">@sabanefebenzil</div>
+                                </div>
+                            </div>
+                            <div class="gh-stats">
+                                <div class="gh-stat-box"><div id="gh-repo-count" class="metro-display" style="font-size:1.15rem;">—</div><div style="font-size:0.62rem;text-transform:uppercase;opacity:0.8;" data-i18n="ghRepoLbl">Repo</div></div>
+                                <div class="gh-stat-box"><div id="gh-follower-count" class="metro-display" style="font-size:1.15rem;">—</div><div style="font-size:0.62rem;text-transform:uppercase;opacity:0.8;" data-i18n="ghFollowerLbl">Takipçi</div></div>
+                            </div>
+                            <div class="gh-repo-list" id="gh-repos-slot"></div>
+                        </article>
+                    </div>
+
+                    <!-- @NPTECHTR SON VİDEOLAR KUTUCUĞU -->
+                    <article class="metro-tile" id="nptech-live-tile" data-metro-tilt style="margin-top:11px;padding:14px 15px;background:linear-gradient(145deg, rgba(168, 18, 28, 0.88), rgba(42, 10, 18, 0.94));">
+                        <div class="tile-head">
+                            <div class="tile-head-title">
+                                <span style="color:#ff6b6b;">▶</span>
+                                <span>nptech (@nptechtr)</span>
+                                <span id="nptech-mode-badge" class="source-badge">Kanal Arşivi</span>
+                            </div>
+                            <a id="nptech-channel-link" href="https://www.youtube.com/@nptechtr" target="_blank" rel="noopener noreferrer" class="win-circle-btn sm" title="YouTube">↗</a>
+                        </div>
+                        <div class="gh-repo-list" id="nptech-videos-slot"></div>
+                    </article>
+                </section>
+            </div>
+        </main>
+
+        <!-- ALT SAYFALAR (WINSTRAP PIVOT) -->
+        <section id="subpage-view" class="subpage-wrap hidden" aria-label="Alt Sayfa">
+            <div class="row-between flex-wrap" style="margin-bottom:14px;">
+                <div class="row-center" style="gap:12px;">
+                    <button type="button" class="win-backbutton" onclick="handleBackAction()" title="Geri dön / Back (Esc)" aria-label="Geri dön">←</button>
+                    <div class="metro-micro">
+                        <button type="button" style="background:none;border:none;cursor:pointer;color:var(--text-secondary);" onclick="navigateTo('home')">SABANEFEBENZIL</button>
+                        <span style="margin:0 5px;opacity:0.45;">/</span>
+                        <span id="breadcrumb-section" style="color:var(--text-primary);">PROJELER</span>
+                    </div>
+                </div>
+                <div class="top-quick-bar">
+                    <button type="button" class="metro-bar-btn" onclick="openSearchCharm()" title="Ctrl+K"><span data-i18n="topSearch">Ara</span><span class="kbd-chip">Ctrl+K</span></button>
+                    <button type="button" class="metro-bar-btn" onclick="cycleTheme()"><span id="sub-theme-label">Harmony</span></button>
+                    <button type="button" class="metro-bar-btn" onclick="toggleLowEndMode()"><span id="sub-lowend-label">⚡ Standart</span></button>
+                    <button type="button" class="metro-bar-btn" id="sub-lang-btn" onclick="toggleLanguage()" title="Dil değiştir / Switch language"><span id="sub-lang-label">🌐 TR</span></button>
+                    <button type="button" class="metro-bar-btn" onclick="openCharms('theme')">Charms</button>
+                </div>
+            </div>
+
+            <nav class="pivot-bar" id="pivot-bar" aria-label="Bölümler">
+                <a href="blog.html" class="pivot-tab" data-i18n="navBlog">blog</a>
+                <button type="button" class="pivot-tab" data-pivot="projects" onclick="navigateTo('projects')" data-i18n="navProjects">projeler</button>
+                <button type="button" class="pivot-tab" data-pivot="games" onclick="navigateTo('games')" data-i18n="navGames">oyunlar</button>
+                <button type="button" class="pivot-tab" data-pivot="about" onclick="navigateTo('about')" data-i18n="navAbout">hakkımda</button>
+                <button type="button" class="pivot-tab" data-pivot="setup" onclick="navigateTo('setup')" data-i18n="navSetup">setup</button>
+                <button type="button" class="pivot-tab" data-pivot="hadis" onclick="navigateTo('hadis')" data-i18n="navHadis">40 hadis</button>
+                <button type="button" class="pivot-tab" data-pivot="sysinfo" onclick="navigateTo('sysinfo')" data-i18n="navSysinfo">sistem &amp; ip</button>
+                <button type="button" class="pivot-tab" data-pivot="toolkit" onclick="navigateTo('toolkit')" data-i18n="navToolkit">format &amp; iso</button>
+                <button type="button" class="pivot-tab" data-pivot="android" onclick="navigateTo('android')" data-i18n="navAndroid">android &amp; adb</button>
+                <button type="button" class="pivot-tab" data-pivot="evcharge" onclick="navigateTo('evcharge')" data-i18n="navEv">ev şarj</button>
+                <button type="button" class="pivot-tab" data-pivot="contact" onclick="navigateTo('contact')" data-i18n="navContact">iletişim</button>
+            </nav>
+
+            <div id="subpage-content" class="metro-enter"></div>
+        </section>
+    </div>
+
+    <!-- WINDOWS 8 CHARMS BAR -->
+    <div id="charms-backdrop" onclick="closeCharms()"></div>
+    <aside id="charms-drawer" aria-label="Charms Bar" aria-hidden="true">
+        <div class="charms-rail">
+            <button type="button" class="charm-rail-btn active" data-charm="theme" onclick="switchCharmTab('theme')"><span>🎨</span><span data-i18n="charmTheme">Tema</span></button>
+            <button type="button" class="charm-rail-btn" data-charm="perf" onclick="switchCharmTab('perf')"><span>⚡</span><span data-i18n="charmPerf">Hız</span></button>
+            <button type="button" class="charm-rail-btn" data-charm="nav" onclick="switchCharmTab('nav')"><span>⊞</span><span data-i18n="charmNav">Gezin</span></button>
+            <button type="button" class="charm-rail-btn" data-charm="admin" onclick="closeCharms();openAdminModal()"><span>⚙</span><span>Admin</span></button>
+        </div>
+        <div class="charms-pane">
+            <div class="row-between" style="margin-bottom:16px;">
+                <h2 class="metro-display" id="charms-title" style="font-size:1.52rem;">Tema &amp; Vurgu</h2>
+                <button type="button" class="win-circle-btn sm" onclick="closeCharms()" aria-label="Kapat">✕</button>
+            </div>
+            <div id="charms-body" style="flex:1;"></div>
+        </div>
+    </aside>
+
+    <!-- MODAL (PROJE DETAYI, OYUN OYNATICI, CTRL+K ARAMA & ADMİN PANELİ) -->
+    <div id="metro-modal-backdrop" class="metro-modal-backdrop hidden" onclick="if(event.target===this) closeMetroModal()">
+        <div class="metro-modal-box" id="metro-modal-body" role="dialog" aria-modal="true"></div>
+    </div>
+
+    <script src="data.js?v=6"></script>
+    <script src="app.js?v=6"></script>
+</body>
+</html>
