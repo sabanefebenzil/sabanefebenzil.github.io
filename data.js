@@ -16,7 +16,7 @@ const SOCIAL_ICON_SVGS = {
 };
 
 const DEFAULT_SITE_CONFIG = {
-    "configVersion": 1795622929930,
+    "configVersion": 1795627077053,
     "fullName": "Şaban Efe Benzil",
     "username": "sabanefebenzil",
     "domainPrefix": "sabanefebenzil",
@@ -92,8 +92,8 @@ const DEFAULT_SITE_CONFIG = {
         {
             "id": "soc-steam",
             "name": "Steam",
-            "handle": "@sabanefebenzil",
-            "url": "https://steamcommunity.com/id/sabanefebenzil",
+            "handle": "@neonpeekr",
+            "url": "https://steamcommunity.com/profiles/76561199194812189/",
             "color": "#1B2838",
             "icon": "steam"
         }
