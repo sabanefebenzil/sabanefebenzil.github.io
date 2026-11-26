@@ -16,7 +16,7 @@ const SOCIAL_ICON_SVGS = {
 };
 
 const DEFAULT_SITE_CONFIG = {
-    "configVersion": 1795720115640,
+    "configVersion": 1795720996009,
     "fullName": "Şaban Efe Benzil",
     "username": "sabanefebenzil",
     "domainPrefix": "sabanefebenzil",
