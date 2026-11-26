@@ -4,12 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blog — sabanefebenzil.dev | Şaban Efe Benzil</title>
-    <meta name="description" content="Şaban Efe Benzil (@sabanefebenzil) — SolidWorks, Fiber Lazer CNC, Donanım Modifikasyonu, Android ROM ve Mühendislik Yazıları.">
+    <meta name="description" content="Şaban Efe Benzil (@sabanefebenzil) — Makine Mühendisliği, SolidWorks 3D CAD, donanım modifikasyonu, Android ROM ve teknik yazılar.">
+
+    <!-- Open Graph & X (Twitter) Paylaşım Kartı -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="sabanefebenzil.dev">
+    <meta property="og:locale" content="tr_TR">
+    <meta property="og:url" content="https://sabanefebenzil.github.io/blog.html">
+    <meta property="og:title" content="Blog — sabanefebenzil.dev | Şaban Efe Benzil">
+    <meta property="og:description" content="Makine Mühendisliği, 3D CAD, bilgisayar donanımı, Android ROM/modifikasyon ve teknik inceleme yazıları.">
+    <meta property="og:image" content="https://sabanefebenzil.github.io/profil.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Blog — sabanefebenzil.dev">
+    <meta name="twitter:description" content="3D CAD, donanım modifikasyonu, Android ROM ve mühendislik yazıları.">
+    <meta name="twitter:image" content="https://sabanefebenzil.github.io/profil.jpg">
+    <meta name="theme-color" content="#0078D7">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cormorant+Garamond:wght@400;600&family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Open+Sans:wght@300;400;600&family=UnifrakturMaguntia&family=Work+Sans:wght@200;300;400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=6">
+    <link rel="stylesheet" href="style.css?v=7">
 </head>
 <body data-theme="harmony">
 
@@ -93,8 +107,11 @@
         </main>
     </div>
 
-    <!-- TAM EKRAN MAKALE OKUYUCU -->
+    <!-- TAM EKRAN MAKALE OKUYUCU + OKUMA İLERLEME ÇUBUĞU -->
     <div id="blog-reader-overlay" class="blog-reader-overlay hidden" role="dialog" aria-modal="true" aria-label="Makale Okuyucu">
+        <div id="blog-reading-progress" class="blog-reading-progress" aria-hidden="true">
+            <div id="blog-reading-progress-fill" class="blog-reading-progress-fill"></div>
+        </div>
         <div class="blog-reader-shell metro-enter" id="blog-reader-body"></div>
     </div>
 
@@ -115,7 +132,7 @@
         </div>
     </aside>
 
-    <script src="data.js?v=6"></script>
-    <script src="blog.js?v=6"></script>
+    <script src="data.js?v=7"></script>
+    <script src="blog.js?v=7"></script>
 </body>
 </html>

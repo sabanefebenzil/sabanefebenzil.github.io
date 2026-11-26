@@ -4,12 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>sabanefebenzil.dev — Şaban Efe Benzil | Metro UI &amp; Frutiger Aero</title>
-    <meta name="description" content="Şaban Efe Benzil (@sabanefebenzil) — Erciyes Üniversitesi Makine Mühendisliği, SolidWorks CAD & Bodor Fiber Lazer CNC Uzmanı, Donanım Modifikasyonu ve @nptechtr.">
+    <meta name="description" content="Şaban Efe Benzil (@sabanefebenzil) — Erciyes Üniversitesi Makine Mühendisliği öğrencisi, 3D CAD, donanım modifikasyonu, 51 tarayıcı oyunu ve @nptechtr.">
+
+    <!-- Open Graph & X (Twitter) Paylaşım Kartı -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="sabanefebenzil.dev">
+    <meta property="og:locale" content="tr_TR">
+    <meta property="og:url" content="https://sabanefebenzil.github.io/">
+    <meta property="og:title" content="sabanefebenzil.dev — Şaban Efe Benzil">
+    <meta property="og:description" content="Windows 8 Metro UI & Frutiger Aero portfolyo: 6 tema, canlı kutucuklar, 51 tarayıcı oyunu, Kayseri hava durumu, Format/ISO, Android ADB ve EV şarj araçları.">
+    <meta property="og:image" content="https://sabanefebenzil.github.io/profil.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="sabanefebenzil.dev — Şaban Efe Benzil">
+    <meta name="twitter:description" content="Metro UI & Frutiger Aero kişisel portfolyo, 51 tarayıcı oyunu, teknik blog, Format/ISO, ADB ve EV şarj araçları.">
+    <meta name="twitter:image" content="https://sabanefebenzil.github.io/profil.jpg">
+    <meta name="theme-color" content="#0078D7">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cormorant+Garamond:wght@400;600&family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Open+Sans:wght@300;400;600&family=UnifrakturMaguntia&family=Work+Sans:wght@200;300;400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=6">
+    <link rel="stylesheet" href="style.css?v=7">
 </head>
 <body data-theme="harmony">
 
@@ -49,7 +63,7 @@
                     </button>
                     <div class="min-w-0">
                         <h1 class="metro-display site-title truncate" id="site-title-el">sabanefebenzil<span class="domain-tld">.dev</span></h1>
-                        <p class="site-subtitle" id="site-subtitle-el">3D CAD &amp; Fiber Lazer CNC Uzmanı, Donanım Modifikasyonu &amp; @nptechtr İçerik Üreticisi</p>
+                        <p class="site-subtitle" id="site-subtitle-el">Makine Mühendisliği Öğrencisi, 3D CAD, Donanım Modifikasyonu &amp; @nptechtr</p>
                     </div>
                 </div>
 
@@ -86,63 +100,125 @@
                     <div class="whoami-panel" id="whoami-bio-box"></div>
 
                     <h2 class="metro-section-head">jump to...</h2>
-                    <div class="jump-grid">
-                        <a href="blog.html" class="metro-tile tile-accent tile-sq" data-metro-tilt>
-                            <span class="tile-big-num" id="tile-count-blog">3</span>
-                            <span class="tile-footer-label"><span data-i18n="navBlog">blog</span><span class="corner-badge" data-i18n="badgeBlog">yazı</span></span>
+                    <div class="jump-grid wp-grid">
+                        <!-- 1) BLOG — Geniş 4x2 Canlı Kutucuk (Dikey Kayma) -->
+                        <a href="blog.html" class="metro-tile tile-accent wp-tile wp-wide live-tile" data-metro-tilt data-live-tile="blog" data-live-anim="slide">
+                            <span class="live-tile-inner">
+                                <span class="live-face live-face-front">
+                                    <span class="tile-big-num" id="tile-count-blog">3</span>
+                                    <span class="tile-footer-label"><span data-i18n="navBlog">blog</span><span class="corner-badge" data-i18n="badgeBlog">yazı</span></span>
+                                </span>
+                                <span class="live-face live-face-back" id="lt-back-blog">
+                                    <span class="lt-back-kicker" data-i18n="ltLatestBlog">son yazı</span>
+                                    <span class="lt-back-title">Yükleniyor...</span>
+                                    <span class="lt-back-meta">blog.html →</span>
+                                </span>
+                            </span>
                         </a>
-                        <button type="button" class="metro-tile tile-accent tile-sq" data-metro-tilt onclick="navigateTo('projects')">
-                            <span class="tile-big-num" id="tile-count-projects">4</span>
-                            <span class="tile-footer-label"><span data-i18n="navProjects">projeler</span><span class="corner-badge" data-i18n="badgeProjects">işler</span></span>
+
+                        <!-- 2) OYUNLAR — Orta 2x2 Canlı Kutucuk (3D Flip + Rastgele Oyun) -->
+                        <button type="button" class="metro-tile tile-accent-deep wp-tile wp-md live-tile" data-metro-tilt data-live-tile="games" data-live-anim="flip" onclick="handleGamesLiveTileClick()">
+                            <span class="live-tile-inner">
+                                <span class="live-face live-face-front">
+                                    <span class="tile-big-num" id="tile-count-games">51</span>
+                                    <span class="tile-footer-label"><span data-i18n="navGames">oyunlar</span><span class="corner-badge" data-i18n="badgeGames">arcade</span></span>
+                                </span>
+                                <span class="live-face live-face-back" id="lt-back-games">
+                                    <span class="lt-back-kicker" data-i18n="ltRandomGame">oyun önerisi</span>
+                                    <span class="lt-back-title">🎮 2048 Game</span>
+                                    <span class="lt-back-meta" data-i18n="ltClickPlay">tıkla &amp; oyna ▶</span>
+                                </span>
+                            </span>
                         </button>
-                        <button type="button" class="metro-tile tile-accent-deep tile-sq" data-metro-tilt onclick="navigateTo('games')">
-                            <span class="tile-big-num" id="tile-count-games">51</span>
-                            <span class="tile-footer-label"><span data-i18n="navGames">oyunlar</span><span class="corner-badge" data-i18n="badgeGames">arcade</span></span>
+
+                        <!-- 3) PROJELER — Orta 2x2 Canlı Kutucuk (3D Flip) -->
+                        <button type="button" class="metro-tile tile-accent wp-tile wp-md live-tile" data-metro-tilt data-live-tile="projects" data-live-anim="flip" onclick="navigateTo('projects')">
+                            <span class="live-tile-inner">
+                                <span class="live-face live-face-front">
+                                    <span class="tile-big-num" id="tile-count-projects">4</span>
+                                    <span class="tile-footer-label"><span data-i18n="navProjects">projeler</span><span class="corner-badge" data-i18n="badgeProjects">işler</span></span>
+                                </span>
+                                <span class="live-face live-face-back" id="lt-back-projects">
+                                    <span class="lt-back-kicker" data-i18n="ltFeaturedProj">öne çıkan</span>
+                                    <span class="lt-back-title">nptech (@nptechtr)</span>
+                                    <span class="lt-back-meta">detay →</span>
+                                </span>
+                            </span>
                         </button>
-                        <button type="button" class="metro-tile tile-accent-deep tile-sq" data-metro-tilt onclick="navigateTo('about')">
-                            <div class="tile-icon-slot">
-                                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a7 7 0 0 1 14 0v1"/></svg>
-                            </div>
-                            <span class="tile-footer-label"><span data-i18n="navAbout">hakkımda</span></span>
+
+                        <!-- 4) 40 HADİS — Orta 2x2 Canlı Kutucuk (3D Flip) -->
+                        <button type="button" class="metro-tile tile-accent-deep wp-tile wp-md live-tile" data-metro-tilt data-live-tile="hadis" data-live-anim="flip" onclick="navigateTo('hadis')">
+                            <span class="live-tile-inner">
+                                <span class="live-face live-face-front">
+                                    <span class="tile-big-num">40</span>
+                                    <span class="tile-footer-label"><span data-i18n="navHadis">40 hadis</span><span class="corner-badge" data-i18n="badgeHadis">günlük</span></span>
+                                </span>
+                                <span class="live-face live-face-back" id="lt-back-hadis">
+                                    <span class="lt-back-kicker" data-i18n="hadithOfDay">Günün Hadisi</span>
+                                    <span class="lt-back-title">Ameller Niyetlere Göredir</span>
+                                    <span class="lt-back-meta">#1 / 40</span>
+                                </span>
+                            </span>
                         </button>
-                        <button type="button" class="metro-tile tile-slate tile-sq" data-metro-tilt onclick="navigateTo('setup')">
-                            <div class="tile-icon-slot">
-                                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="4" width="20" height="13"/><path d="M8 21h8M12 17v4"/></svg>
-                            </div>
-                            <span class="tile-footer-label"><span data-i18n="navSetup">setup</span><span class="corner-badge" data-i18n="badgeSetup">garaj</span></span>
+
+                        <!-- 5) SETUP & GARAJ — Orta 2x2 Canlı Kutucuk (Dikey Kayma) -->
+                        <button type="button" class="metro-tile tile-slate wp-tile wp-md live-tile" data-metro-tilt data-live-tile="setup" data-live-anim="slide" onclick="navigateTo('setup')">
+                            <span class="live-tile-inner">
+                                <span class="live-face live-face-front">
+                                    <span class="tile-icon-slot">
+                                        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="4" width="20" height="13"/><path d="M8 21h8M12 17v4"/></svg>
+                                    </span>
+                                    <span class="tile-footer-label"><span data-i18n="navSetup">setup</span><span class="corner-badge" data-i18n="badgeSetup">garaj</span></span>
+                                </span>
+                                <span class="live-face live-face-back" id="lt-back-setup">
+                                    <span class="lt-back-kicker">PC &amp; Garaj</span>
+                                    <span class="lt-back-title">Ryzen 5 5500 · Arc B580</span>
+                                    <span class="lt-back-meta">Togg T10F · Rothko</span>
+                                </span>
+                            </span>
                         </button>
-                        <button type="button" class="metro-tile tile-accent-deep tile-sq" data-metro-tilt onclick="navigateTo('hadis')">
-                            <span class="tile-big-num">40</span>
-                            <span class="tile-footer-label"><span data-i18n="navHadis">40 hadis</span><span class="corner-badge" data-i18n="badgeHadis">günlük</span></span>
+
+                        <!-- 6) HAKKIMDA — Geniş 4x2 Sabit Profil Kutucuğu -->
+                        <button type="button" class="metro-tile tile-accent-deep wp-tile wp-wide" data-metro-tilt onclick="navigateTo('about')">
+                            <span class="wp-wide-static">
+                                <span class="row-between" style="width:100%;">
+                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a7 7 0 0 1 14 0v1"/></svg>
+                                    <span class="corner-badge">ERÜ · Kayseri</span>
+                                </span>
+                                <span class="wp-wide-desc" id="about-tile-summary">Makine Mühendisliği · 3D CAD · Donanım &amp; @nptechtr</span>
+                                <span class="tile-footer-label" style="width:100%;"><span data-i18n="navAbout">hakkımda</span><span style="opacity:0.8;">→</span></span>
+                            </span>
                         </button>
-                        <button type="button" class="metro-tile tile-slate tile-sq" data-metro-tilt onclick="navigateTo('toolkit')">
-                            <div class="tile-icon-slot">
-                                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3v12m0 0-4-4m4 4 4-4"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
-                            </div>
-                            <span class="tile-footer-label"><span data-i18n="navToolkit">format &amp; iso</span><span class="corner-badge" data-i18n="badgeToolkit">araç</span></span>
+
+                        <!-- 7-10) 4 ADET KÜÇÜK 1x1 KUTUCUK (Sabit, 2x2 blok oluşturur) -->
+                        <button type="button" class="metro-tile tile-slate wp-tile wp-sm" data-metro-tilt onclick="navigateTo('toolkit')" title="Format &amp; ISO Merkezi" aria-label="Format &amp; ISO Merkezi">
+                            <span class="wp-sm-icon">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3v12m0 0-4-4m4 4 4-4"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+                            </span>
+                            <span class="wp-sm-label" data-i18n="navToolkitShort">ISO</span>
                         </button>
-                        <button type="button" class="metro-tile tile-accent-deep tile-sq" data-metro-tilt onclick="navigateTo('android')">
-                            <div class="tile-icon-slot">
-                                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="6" y="3" width="12" height="18" rx="2"/><path d="M10 18h4"/><path d="M9 7h6"/></svg>
-                            </div>
-                            <span class="tile-footer-label"><span data-i18n="navAndroid">android &amp; adb</span><span class="corner-badge">rom</span></span>
+                        <button type="button" class="metro-tile tile-accent-deep wp-tile wp-sm" data-metro-tilt onclick="navigateTo('android')" title="Android &amp; ADB Merkezi" aria-label="Android &amp; ADB Merkezi">
+                            <span class="wp-sm-icon">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="6" y="3" width="12" height="18" rx="2"/><path d="M10 18h4"/><path d="M9 7h6"/></svg>
+                            </span>
+                            <span class="wp-sm-label" data-i18n="navAndroidShort">ADB</span>
                         </button>
-                        <button type="button" class="metro-tile tile-slate tile-sq" data-metro-tilt onclick="navigateTo('evcharge')">
-                            <div class="tile-icon-slot">
-                                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg>
-                            </div>
-                            <span class="tile-footer-label"><span data-i18n="navEv">ev şarj</span><span class="corner-badge">kwh</span></span>
+                        <button type="button" class="metro-tile tile-slate wp-tile wp-sm" data-metro-tilt onclick="navigateTo('evcharge')" title="EV Şarj &amp; Yol Maliyeti" aria-label="EV Şarj &amp; Yol Maliyeti">
+                            <span class="wp-sm-icon">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg>
+                            </span>
+                            <span class="wp-sm-label" data-i18n="navEvShort">EV</span>
                         </button>
-                        <button type="button" class="metro-tile tile-accent tile-sq" data-metro-tilt onclick="navigateTo('contact')">
-                            <div class="tile-icon-slot">
-                                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="5" width="20" height="14"/><path d="M2 5.5 12 13l10-7.5"/></svg>
-                            </div>
-                            <span class="tile-footer-label"><span data-i18n="navContact">iletişim</span></span>
+                        <button type="button" class="metro-tile tile-accent wp-tile wp-sm" data-metro-tilt onclick="navigateTo('contact')" title="İletişim" aria-label="İletişim">
+                            <span class="wp-sm-icon">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="2" y="5" width="20" height="14"/><path d="M2 5.5 12 13l10-7.5"/></svg>
+                            </span>
+                            <span class="wp-sm-label" data-i18n="navContactShort">iletişim</span>
                         </button>
                     </div>
 
                     <!-- ZİYARETÇİ SİSTEM BİLGİLERİ & IP CANLI KUTUCUĞU -->
-                    <div class="metro-tile sysinfo-wide-tile" data-metro-tilt onclick="navigateTo('sysinfo')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();navigateTo('sysinfo');}" title="Sistem & IP">
+                    <div class="metro-tile sysinfo-wide-tile" data-metro-tilt onclick="navigateTo('sysinfo')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();navigateTo('sysinfo');}" title="Sistem &amp; IP">
                         <div class="row-center min-w-0" style="gap:11px;flex:1;">
                             <div class="sysinfo-icon-box" aria-hidden="true">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="2" y="3" width="20" height="14"/><path d="M8 21h8M12 17v4"/><circle cx="12" cy="10" r="2.5"/></svg>
@@ -179,7 +255,7 @@
                     <div class="row-between" style="margin-bottom:11px;">
                         <h2 class="metro-section-head" style="margin-bottom:0;">what i'm up to</h2>
                         <div class="row-center" style="gap:7px;">
-                            <button type="button" class="win-circle-btn" onclick="openCharms('theme')" title="Temalar & Vurgu Rengi" aria-label="Temalar">
+                            <button type="button" class="win-circle-btn" onclick="openCharms('theme')" title="Temalar &amp; Vurgu Rengi" aria-label="Temalar">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3" fill="currentColor"/></svg>
                             </button>
                             <button type="button" class="win-circle-btn" onclick="refreshAllLiveTiles()" title="Yenile / Refresh" aria-label="Yenile">
@@ -227,7 +303,7 @@
                         </article>
                     </div>
 
-                    <!-- KAYSERİ HAVA DURUMU & KIYAFET / ŞEMSİYE ÖNERİ PANELİ -->
+                    <!-- KAYSERİ HAVA DURUMU, ATMOSFER TEMA ÖNERİSİ & KIYAFET / ŞEMSİYE -->
                     <article class="metro-tile tile-weather" id="weather-live-tile" data-metro-tilt>
                         <div class="row-between flex-wrap" style="margin-bottom:8px;">
                             <div class="row-center" style="gap:6px;">
@@ -249,6 +325,7 @@
                             </div>
                         </div>
 
+                        <div class="weather-atmo-bar hidden" id="weather-atmosphere-slot"></div>
                         <div class="weather-advice-list" id="weather-advice-slot"></div>
                     </article>
 
@@ -378,12 +455,12 @@
         </div>
     </aside>
 
-    <!-- MODAL (PROJE DETAYI, OYUN OYNATICI, CTRL+K ARAMA & ADMİN PANELİ) -->
+    <!-- MODAL (PROJE DETAYI, BÜYÜK OYUN OYNATICI, CTRL+K ARAMA & ADMİN PANELİ) -->
     <div id="metro-modal-backdrop" class="metro-modal-backdrop hidden" onclick="if(event.target===this) closeMetroModal()">
         <div class="metro-modal-box" id="metro-modal-body" role="dialog" aria-modal="true"></div>
     </div>
 
-    <script src="data.js?v=6"></script>
-    <script src="app.js?v=6"></script>
+    <script src="data.js?v=7"></script>
+    <script src="app.js?v=7"></script>
 </body>
 </html>

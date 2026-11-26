@@ -1,6 +1,7 @@
 /* =====================================================================
    sabanefebenzil.dev — Bağımsız Blog Modülü (blog.html)
-   Ortak data.js ve style.css ile senkronize çalışır. (TR / EN Destekli)
+   Okuma İlerleme Çubuğu, Kopyalanabilir Kod Blokları, TR/EN Dil Motoru,
+   6 Görsel Tema, Low-End Modu ve Ortak data.js Senkronizasyonu
    ===================================================================== */
 
 const $ = id => document.getElementById(id);
@@ -19,6 +20,7 @@ const escapeHtml = str => String(str ?? "")
    1. KONFİGÜRASYON, DİL SÖZLÜĞÜ & DURUM
    ===================================================================== */
 let SITE_CONFIG = clone(DEFAULT_SITE_CONFIG);
+let activeCodeBlocks = [];
 
 const blogState = {
     lang: "tr",
@@ -41,6 +43,7 @@ const BLOG_I18N = {
         searchPh: "Yazılarda ara...", noPosts: "Bu kriterde yazı bulunamadı.",
         allPosts: "Tüm Yazılar", copyLink: "Bağlantıyı Kopyala", closeReader: "Okuyucuyu Kapat",
         linkCopied: "Makale bağlantısı panoya kopyalandı.", close: "kapat",
+        copyCode: "Kopyala", codeCopied: "Kod bloğu panoya kopyalandı.", codeLabel: "KOD",
         lowOn: "⚡ Düşük Performans: AÇIK", lowOff: "⚡ Standart",
         toastLowOn: "Düşük Performans Modu açıldı: Canvas, blur ve animasyonlar durduruldu.",
         toastLowOff: "Standart Mod açıldı: Canlı arka plan ve Metro animasyonları aktif.",
@@ -62,6 +65,7 @@ const BLOG_I18N = {
         searchPh: "Search articles...", noPosts: "No articles matched this filter.",
         allPosts: "All Articles", copyLink: "Copy Link", closeReader: "Close Reader",
         linkCopied: "Article link copied to clipboard.", close: "close",
+        copyCode: "Copy", codeCopied: "Code block copied to clipboard.", codeLabel: "CODE",
         lowOn: "⚡ Low-End Mode: ON", lowOff: "⚡ Standard",
         toastLowOn: "Low-End Mode enabled: Canvas, blur and animations paused.",
         toastLowOff: "Standard Mode enabled: Live background and Metro animations active.",
@@ -426,7 +430,7 @@ function renderCharmsPane() {
 }
 
 /* =====================================================================
-   4. KATEGORİ FİLTRELERİ, ARAMA & TAM EKRAN MAKALE OKUYUCU
+   4. KATEGORİ FİLTRELERİ, ARAMA, OKUMA İLERLEMESİ & KOD BLOKLARI
    ===================================================================== */
 function getBlogCategories() {
     const defaults = ["Tümü", "Makine & CAD", "Donanım", "Yazılım & ROM", "Genel & Otomotiv"];
@@ -482,7 +486,7 @@ function renderBlogList() {
                             <span class="blog-day-num">${escapeHtml(post.day)}</span>
                             <span class="blog-month-lbl">${escapeHtml(post.month)}</span>
                         </div>
-                        ${post.image ? `<div class="blog-thumb-box"><img src="${escapeHtml(post.image)}" alt="${escapeHtml(post.title)}" loading="lazy" onerror="this.onerror=null;this.src='https://placehold.co/320x200/0f172a/0078D7?text=SEB+Blog'"></div>` : ""}
+                        ${post.image ? `<div class="blog-thumb-box"><img src="${escapeHtml(post.image)}" alt="${escapeHtml(post.title)}" loading="lazy" onerror="this.onerror=null;this.src='[https://placehold.co/320x200/0f172a/0078D7?text=SEB+Blog](https://placehold.co/320x200/0f172a/0078D7?text=SEB+Blog)'"></div>` : ""}
                         <div class="min-w-0" style="flex:1;">
                             <h3 class="blog-row-title">${escapeHtml(post.title)}</h3>
                             <p style="font-size:0.89rem;color:var(--text-secondary);margin-bottom:5px;">${escapeHtml(post.excerpt)}</p>
@@ -491,6 +495,69 @@ function renderBlogList() {
                     </article>`).join("")}
             </div>
         </div>`).join("");
+}
+
+function renderArticleProse(rawContent) {
+    activeCodeBlocks = [];
+    const normalized = String(rawContent || "").replace(/\r\n/g, "\n");
+
+    const withPlaceholders = normalized.replace(/```([a-zA-Z0-9_-]*)\n([\s\S]*?)```/g, (_, lang, code) => {
+        const idx = activeCodeBlocks.length;
+        activeCodeBlocks.push({
+            lang: (lang || "").trim().toUpperCase(),
+            code: code.replace(/\n$/, "")
+        });
+        return `\n\n@@CODE_BLOCK_${idx}@@\n\n`;
+    });
+
+    return withPlaceholders
+        .split(/\n\s*\n/)
+        .map(block => {
+            const trimmed = block.trim();
+            if (!trimmed) return "";
+
+            const codeMatch = trimmed.match(/^@@CODE_BLOCK_(\d+)@@$/);
+            if (codeMatch) {
+                const idx = Number(codeMatch[1]);
+                const entry = activeCodeBlocks[idx];
+                if (!entry) return "";
+                const langBadge = entry.lang || tr("codeLabel");
+                return `
+                    <div class="article-code-box">
+                        <div class="article-code-head">
+                            <span class="metro-micro" style="color:var(--accent-light);">${escapeHtml(langBadge)}</span>
+                            <button type="button" class="metro-flat-btn xs" onclick="copyArticleCodeBlock(${idx})">${escapeHtml(tr("copyCode"))}</button>
+                        </div>
+                        <pre class="article-code-pre"><code>${escapeHtml(entry.code)}</code></pre>
+                    </div>`;
+            }
+
+            if (trimmed.startsWith("### ")) {
+                return `<h3>${escapeHtml(trimmed.slice(4))}</h3>`;
+            }
+
+            const inlineFormatted = escapeHtml(trimmed)
+                .replace(/`([^`]+)`/g, '<code style="font-family:var(--font-mono);font-size:0.86em;padding:1px 5px;background:rgba(0,0,0,0.36);border:1px solid rgba(255,255,255,0.16);color:var(--accent-light);">$1</code>')
+                .replace(/\n/g, "<br>");
+            return `<p>${inlineFormatted}</p>`;
+        })
+        .join("");
+}
+
+function copyArticleCodeBlock(idx) {
+    const entry = activeCodeBlocks[idx];
+    if (!entry) return;
+    copyText(entry.code, tr("codeCopied"));
+}
+
+function updateReadingProgress() {
+    const overlay = $("blog-reader-overlay");
+    const fill = $("blog-reading-progress-fill");
+    if (!overlay || !fill || overlay.classList.contains("hidden")) return;
+
+    const maxScroll = overlay.scrollHeight - overlay.clientHeight;
+    const pct = maxScroll <= 0 ? 100 : Math.min(100, Math.max(0, (overlay.scrollTop / maxScroll) * 100));
+    fill.style.width = `${pct.toFixed(1)}%`;
 }
 
 function openArticle(id, pushUrl = true) {
@@ -512,10 +579,7 @@ function openArticle(id, pushUrl = true) {
         history.replaceState(null, "", url.toString());
     }
 
-    const blocks = String(post.content || "").split(/\n\s*\n/).map(blk => {
-        const t = blk.trim();
-        return t.startsWith("### ") ? `<h3>${escapeHtml(t.slice(4))}</h3>` : `<p>${escapeHtml(t).replace(/\n/g, "<br>")}</p>`;
-    }).join("");
+    const blocks = renderArticleProse(post.content);
 
     $("blog-reader-body").innerHTML = `
         <div class="row-between flex-wrap" style="padding-bottom:14px;margin-bottom:18px;border-bottom:1px solid rgba(255,255,255,0.16);">
@@ -526,7 +590,7 @@ function openArticle(id, pushUrl = true) {
             </div>
             <span class="mono-sm" style="opacity:0.82;">${escapeHtml(post.day)} ${escapeHtml(post.month)} ${escapeHtml(post.year)} · ${escapeHtml(catLabel(post.category))}${post.readTime ? " · " + escapeHtml(post.readTime) : ""}</span>
         </div>
-        ${post.image ? `<div class="article-cover-wrap"><img src="${escapeHtml(post.image)}" alt="${escapeHtml(post.title)}" class="article-cover-img" onerror="this.onerror=null;this.src='https://placehold.co/900x400/0f172a/0078D7?text=SEB+Blog'"></div>` : ""}
+        ${post.image ? `<div class="article-cover-wrap"><img src="${escapeHtml(post.image)}" alt="${escapeHtml(post.title)}" class="article-cover-img" onerror="this.onerror=null;this.src='[https://placehold.co/900x400/0f172a/0078D7?text=SEB+Blog](https://placehold.co/900x400/0f172a/0078D7?text=SEB+Blog)'"></div>` : ""}
         <h1 class="metro-display" style="font-size:clamp(1.7rem,3.6vw,2.5rem);margin-bottom:10px;">${escapeHtml(post.title)}</h1>
         <p style="color:var(--accent-light);font-size:1.02rem;margin-bottom:20px;">${escapeHtml(post.excerpt)}</p>
         <div class="article-prose">${blocks}</div>
@@ -536,13 +600,19 @@ function openArticle(id, pushUrl = true) {
         </div>`;
 
     const overlay = $("blog-reader-overlay");
+    const fill = $("blog-reading-progress-fill");
+    if (fill) fill.style.width = "0%";
     overlay.classList.remove("hidden");
     overlay.scrollTop = 0;
     document.body.style.overflow = "hidden";
+    requestAnimationFrame(updateReadingProgress);
 }
 
 function closeArticle() {
     blogState.activePostId = null;
+    activeCodeBlocks = [];
+    const fill = $("blog-reading-progress-fill");
+    if (fill) fill.style.width = "0%";
     $("blog-reader-overlay")?.classList.add("hidden");
     document.body.style.overflow = "";
     document.title = "Blog — sabanefebenzil.dev | Şaban Efe Benzil";
@@ -595,13 +665,21 @@ function initBlogPage() {
         });
     }
 
+    const readerOverlay = $("blog-reader-overlay");
+    if (readerOverlay) {
+        readerOverlay.addEventListener("scroll", updateReadingProgress, { passive: true });
+    }
+
     const postParam = new URLSearchParams(window.location.search).get("post");
     if (postParam) openArticle(postParam, false);
 
     let resizeTimer;
     window.addEventListener("resize", () => {
         clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(() => canvasEngine.resize(), 150);
+        resizeTimer = setTimeout(() => {
+            canvasEngine.resize();
+            updateReadingProgress();
+        }, 150);
     }, { passive: true });
 
     window.addEventListener("storage", e => {

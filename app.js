@@ -1,9 +1,10 @@
 /* =====================================================================
    sabanefebenzil.dev — Ana Sayfa Motoru (index.html)
-   Yatay Windows 8 Start Screen, TR/EN Dil Motoru, Canvas, Saat,
-   Open-Meteo Hava Durumu & Kıyafet/Şemsiye Önerisi, 40 Hadis, YT Music,
-   GitHub, @nptechtr Videoları, 51 Oyunluk Arcade Merkezi, Sistem/IP,
-   Format & ISO, Android & ADB, EV Şarj Hesaplayıcı, Ctrl+K Search Charm
+   Yatay Windows 8 Start Screen, Asenkron Windows Phone Live Tiles,
+   TR/EN Dil Motoru, Canvas, Saat, Open-Meteo Hava Durumu + Atmosfer Tema
+   Önerisi, 40 Hadis, YT Music, GitHub, @nptechtr Videoları, 51 Oyunluk
+   Arcade Merkezi (Sinema Modu), Sistem/IP, Format & ISO, Android & ADB
+   Mod Arşivi, EV Şarj & Yol Maliyeti Karşılaştırıcı, Ctrl+K Search Charm
    ve Şifreli Admin Paneli
    ===================================================================== */
 
@@ -42,12 +43,13 @@ let SITE_CONFIG = clone(DEFAULT_SITE_CONFIG);
 const state = {
     lang: "tr",
     view: "home", projectFilter: "all", hadithSearch: "",
-    gameCat: "Tümü", gameSearch: "",
+    gameCat: "Tümü", gameSearch: "", gameCinema: false,
     toolkitCat: "Tümü", selectedToolkitIds: null,
     androidCmdCat: "Tümü", adbFile: "magisk_patched.img", adbPkg: "com.miui.analytics",
     adbRes: "1920x1080", adbDpi: "240", webUsbInfo: "",
     evPresetId: "togg-ac", evCapacity: 88.5, evSocStart: 20, evSocTarget: 80,
     evPowerKw: 11, evEfficiency: 92, evConsumption: 16.8, evTariff: 2.85,
+    evTripKm: 320, evIceL100: 5.8, evFuelPrice: 46.50,
     searchQuery: "",
     theme: "harmony", accentHex: "#0078D7", lowEnd: false,
     charmsOpen: false, charmTab: "theme",
@@ -78,6 +80,9 @@ const I18N = {
         navHadis: "40 hadis", badgeHadis: "günlük",
         navToolkit: "format & iso", badgeToolkit: "araç", navAndroid: "android & adb",
         navEv: "ev şarj", navContact: "iletişim", navSysinfo: "sistem & ip",
+        navToolkitShort: "ISO", navAndroidShort: "ADB", navEvShort: "EV", navContactShort: "iletişim",
+        ltLatestBlog: "son yazı", ltRandomGame: "oyun önerisi", ltClickPlay: "tıkla & oyna ▶", ltFeaturedProj: "öne çıkan",
+        aboutTileSummary: "Makine Mühendisliği · 3D CAD · Donanım & @nptechtr",
         copyIpBtn: "IP Kopyala", socialHead: "sosyal ağlar & steam",
         hadithOfDay: "Günün Hadisi", btnToday: "Bugün", btnAllHadiths: "40 Hadis →",
         weatherTitle: "Kayseri Hava Durumu", btnRefresh: "↻ Yenile",
@@ -85,7 +90,7 @@ const I18N = {
         charmTheme: "Tema", charmPerf: "Hız", charmNav: "Gezin",
         feedsHead: "canlı akış", accountsWord: "hesap", close: "kapat",
         lowOn: "⚡ Düşük Performans: AÇIK", lowOff: "⚡ Standart",
-        toastLowOn: "Düşük Performans Modu açıldı: Canvas, blur ve animasyonlar durduruldu.",
+        toastLowOn: "Düşük Performans Modu açıldı: Canvas, blur ve canlı kutucuk döngüleri durduruldu.",
         toastLowOff: "Standart Mod açıldı: Canlı arka plan ve Metro animasyonları aktif.",
         toastTheme: "Tema değiştirildi:", toastAccent: "Vurgu rengi:",
         toastLang: "Dil değiştirildi: Türkçe", toastRefreshed: "Canlı kutucuklar yenilendi.",
@@ -99,14 +104,16 @@ const I18N = {
         hadithWord: "Hadis", todayHadithToast: "Bugünün hadisi gösteriliyor",
         titleTheme: "Tema & Vurgu", visualThemes: "Görsel Temalar (6)", metroAccent: "Metro Vurgu Rengi (6)",
         titlePerf: "Performans Modu",
-        perfDesc: "Düşük güçlü cihazlarda Canvas döngüsünü, tüm bulanıklık (blur) filtrelerini, 3D eğilmeyi ve CSS animasyonlarını tek tıkla kapatır.",
+        perfDesc: "Düşük güçlü cihazlarda Canvas döngüsünü, tüm bulanıklık (blur) filtrelerini, 3D eğilmeyi ve canlı kutucuk animasyonlarını tek tıkla kapatır.",
         perfBtnOff: "⚡ Düşük Performans Modunu Kapat", perfBtnOn: "⚡ Düşük Performans Modunu Aç",
         perfStatus: "Durum:", perfStateLow: "Animasyonsuz, sıfır Canvas & blur", perfStateStd: "Standart 60fps Canvas & Aero cam efektleri",
         titleNav: "Hızlı Gezinme", homeHub: "Ana Sayfa (Start Hub)", adminBtn: "⚙ Yönetim Paneli (Alt+A)",
         searchPlaceholder: "Blog, proje, oyun, 40 hadis, format programı veya ADB komutu ara...",
         quickJumps: "Hızlı Geçişler", noSearchRes: "için sonuç bulunamadı.", resultsFound: "Sonuç Bulundu",
         detailArrow: "detay →", openLink: "Bağlantıyı Aç ↗", closeBtn: "Kapat",
-        playGame: "Oyna ▶", fullscreen: "Tam Ekran", newTab: "Yeni Sekme ↗", reload: "↻ Yenile"
+        playGame: "Oyna ▶", fullscreen: "Tam Ekran", cinemaMode: "Sinema Modu", normalSize: "Normal Boyut",
+        newTab: "Yeni Sekme ↗", reload: "↻ Yenile",
+        atmoApplyBtn: "Temayı Uygula:", atmoMatched: "Atmosferle uyumlu ✓"
     },
     en: {
         topSearch: "Search", navBlog: "blog", badgeBlog: "posts",
@@ -116,6 +123,9 @@ const I18N = {
         navHadis: "40 hadiths", badgeHadis: "daily",
         navToolkit: "format & iso", badgeToolkit: "tools", navAndroid: "android & adb",
         navEv: "ev charge", navContact: "contact", navSysinfo: "system & ip",
+        navToolkitShort: "ISO", navAndroidShort: "ADB", navEvShort: "EV", navContactShort: "contact",
+        ltLatestBlog: "latest post", ltRandomGame: "try this game", ltClickPlay: "click to play ▶", ltFeaturedProj: "featured",
+        aboutTileSummary: "Mechanical Eng. · 3D CAD · Hardware & @nptechtr",
         copyIpBtn: "Copy IP", socialHead: "socials & steam",
         hadithOfDay: "Hadith of the Day", btnToday: "Today", btnAllHadiths: "40 Hadiths →",
         weatherTitle: "Kayseri Weather", btnRefresh: "↻ Refresh",
@@ -123,7 +133,7 @@ const I18N = {
         charmTheme: "Theme", charmPerf: "Speed", charmNav: "Nav",
         feedsHead: "live feed", accountsWord: "accounts", close: "close",
         lowOn: "⚡ Low-End Mode: ON", lowOff: "⚡ Standard",
-        toastLowOn: "Low-End Mode enabled: Canvas, blur and animations paused.",
+        toastLowOn: "Low-End Mode enabled: Canvas, blur and live tile loops paused.",
         toastLowOff: "Standard Mode enabled: Live background and Metro animations active.",
         toastTheme: "Theme changed:", toastAccent: "Accent color:",
         toastLang: "Language switched: English", toastRefreshed: "Live tiles refreshed.",
@@ -137,14 +147,16 @@ const I18N = {
         hadithWord: "Hadith", todayHadithToast: "Showing today's hadith",
         titleTheme: "Theme & Accent", visualThemes: "Visual Themes (6)", metroAccent: "Metro Accent Color (6)",
         titlePerf: "Performance Mode",
-        perfDesc: "Disables Canvas loop, blur filters, 3D tilt and CSS animations in one click on low-end devices.",
+        perfDesc: "Disables Canvas loop, blur filters, 3D tilt and live tile animations in one click on low-end devices.",
         perfBtnOff: "⚡ Turn Off Low-End Mode", perfBtnOn: "⚡ Turn On Low-End Mode",
         perfStatus: "Status:", perfStateLow: "No animations, zero Canvas & blur", perfStateStd: "Standard 60fps Canvas & Aero glass effects",
         titleNav: "Quick Navigation", homeHub: "Home (Start Hub)", adminBtn: "⚙ Admin Panel (Alt+A)",
         searchPlaceholder: "Search blog, projects, games, 40 hadiths, toolkit apps or ADB commands...",
         quickJumps: "Quick Jumps", noSearchRes: "returned no results.", resultsFound: "Results Found",
         detailArrow: "details →", openLink: "Open Link ↗", closeBtn: "Close",
-        playGame: "Play ▶", fullscreen: "Fullscreen", newTab: "New Tab ↗", reload: "↻ Reload"
+        playGame: "Play ▶", fullscreen: "Fullscreen", cinemaMode: "Cinema Mode", normalSize: "Normal Size",
+        newTab: "New Tab ↗", reload: "↻ Reload",
+        atmoApplyBtn: "Apply Theme:", atmoMatched: "Matches weather ✓"
     }
 };
 
@@ -157,16 +169,16 @@ const GAME_CAT_EN = {
     "Kart & Şans": "Card & Chance"
 };
 
-const EN_SUBTITLE = "3D CAD & Fiber Laser CNC Specialist, Hardware Modder & @nptechtr Content Creator";
+const EN_SUBTITLE = "Mechanical Engineering Student, 3D CAD, Hardware Modding & @nptechtr";
 const EN_BIO_PARAGRAPHS = [
     "Hello! I'm Şaban Efe Benzil (aka NeonPeekr, {{AGE}}), based in Melikgazi, Kayseri — it's currently {{WEATHER}} here. I'm a Mechanical Engineering undergraduate student at Erciyes University.",
-    "I combine mechanical design with embedded systems, custom Android ROM/Kernel tinkering, and precision CNC laser manufacturing. I turn 3D parts modelled in SolidWorks and AutoCAD into reality on a 3 kW Bodor fiber laser CNC.",
-    "I also work on PC hardware, thermal cooling mods, Oracle Cloud server automation, and Arduino/TENG experiments, sharing my builds on @nptechtr YouTube and my blog."
+    "I combine mechanical design and 3D modeling with embedded systems, custom Android ROM/Kernel tinkering, and PC hardware. I build sheet-metal and part designs in SolidWorks and AutoCAD.",
+    "I also work on thermal cooling optimizations, home server setups, Oracle Cloud automation, and Arduino/TENG experiments, sharing my notes on @nptechtr YouTube and my blog."
 ];
 const EN_SKILLS = [
-    { title: "SolidWorks & 3D Modeling", desc: "Mechanical part design, sheet metal bending/flat-pattern layouts, assembly simulations, and production-ready technical drawings." },
-    { title: "CNC Fiber Laser Operation", desc: "Parameter optimization on 3 kW Bodor fiber laser cutters, DXF nesting, and custom metal/acrylic chassis fabrication." },
-    { title: "PC Hardware & Cooling Mods", desc: "GPU/CPU thermal optimization, custom case airflow engineering, BIOS/UEFI tuning, and Resizable BAR setups." },
+    { title: "SolidWorks & 3D Modeling", desc: "Mechanical part design, sheet metal bending/flat-pattern layouts, assembly studies, and STEP/DWG/DXF conversions." },
+    { title: "Home Server & Cloud Automation", desc: "Self-hosted home servers on repurposed hardware, Python/Telegram automation bots on Oracle Cloud, and local networking." },
+    { title: "PC Hardware & Cooling Mods", desc: "GPU/CPU thermal optimization, case airflow planning, BIOS/UEFI tuning, and Resizable BAR setups." },
     { title: "Android ROM & System Modding", desc: "Custom ROM flashing, Root & Magisk modules, battery charge control (ACC), and repurposing old flagships as 24/7 media stations." },
     { title: "DIY Electronics & Energy Harvesting", desc: "Arduino prototyping, sensor circuits, and TENG (Triboelectric Nanogenerator) energy harvesting experiments." },
     { title: "Automotive & Vehicle Mechanics", desc: "Internal combustion dynamics, drivetrains, mechanical maintenance, and EV battery/tire efficiency research." }
@@ -245,8 +257,10 @@ function loadConfigFromStorage() {
     delete SITE_CONFIG.xFeed;
     SITE_CONFIG.toolkit = SITE_CONFIG.toolkit || clone(DEFAULT_SITE_CONFIG.toolkit);
     SITE_CONFIG.androidModding = SITE_CONFIG.androidModding || clone(DEFAULT_SITE_CONFIG.androidModding);
+    SITE_CONFIG.androidModding.deviceArchive = SITE_CONFIG.androidModding.deviceArchive || clone(DEFAULT_SITE_CONFIG.androidModding.deviceArchive || []);
     SITE_CONFIG.nptechYoutube = SITE_CONFIG.nptechYoutube || clone(DEFAULT_SITE_CONFIG.nptechYoutube);
     SITE_CONFIG.evPresets = SITE_CONFIG.evPresets || clone(DEFAULT_SITE_CONFIG.evPresets);
+    SITE_CONFIG.evCompare = Object.assign(clone(DEFAULT_SITE_CONFIG.evCompare || {}), SITE_CONFIG.evCompare || {});
     SITE_CONFIG.games = Array.isArray(SITE_CONFIG.games) ? SITE_CONFIG.games : clone(DEFAULT_SITE_CONFIG.games || []);
 }
 
@@ -287,7 +301,15 @@ const canvasEngine = {
         if (!this.canvas) return;
         this.ctx = this.canvas.getContext("2d", { alpha: true });
         this.resize();
-        document.addEventListener("visibilitychange", () => document.hidden ? this.stop() : (!state.lowEnd && this.start()));
+        document.addEventListener("visibilitychange", () => {
+            if (document.hidden) {
+                this.stop();
+                liveTilesEngine.stop();
+            } else if (!state.lowEnd) {
+                this.start();
+                liveTilesEngine.start();
+            }
+        });
         this.orbs = Array.from({ length: 12 }, (_, i) => ({
             x: Math.random(), y: Math.random(), r: 24 + Math.random() * 54,
             vx: (Math.random() - 0.5) * 0.00018, vy: -0.00007 - Math.random() * 0.00014, cIdx: i % 3
@@ -422,6 +444,177 @@ const canvasEngine = {
 };
 
 /* =====================================================================
+   2.5 WINDOWS PHONE ASENKRON LIVE TILES MOTORU
+   ===================================================================== */
+const liveTilesEngine = {
+    entries: new Map(),
+    running: false,
+    bound: false,
+    suggestedGameId: null,
+    projCursor: 0,
+    setupCursor: 0,
+    blogCursor: 0,
+
+    specs: [
+        { key: "blog",     initialDelay: 1600, frontMin: 6200, frontMax: 9600, backMin: 4400, backMax: 6000 },
+        { key: "games",    initialDelay: 4100, frontMin: 5800, frontMax: 9000, backMin: 4600, backMax: 6200 },
+        { key: "projects", initialDelay: 6700, frontMin: 6800, frontMax: 10200, backMin: 4200, backMax: 5800 },
+        { key: "hadis",    initialDelay: 9200, frontMin: 7200, frontMax: 10800, backMin: 4800, backMax: 6400 },
+        { key: "setup",    initialDelay: 11600, frontMin: 6500, frontMax: 9800, backMin: 4300, backMax: 5900 }
+    ],
+
+    rand(min, max) {
+        return Math.floor(min + Math.random() * (max - min));
+    },
+
+    init() {
+        if (!this.bound) {
+            this.bound = true;
+            this.specs.forEach(spec => {
+                const el = document.querySelector(`[data-live-tile="${spec.key}"]`);
+                if (!el) return;
+                const rec = { el, spec, timerId: null, hovered: false, flipped: false };
+                el.addEventListener("mouseenter", () => { rec.hovered = true; }, { passive: true });
+                el.addEventListener("mouseleave", () => { rec.hovered = false; }, { passive: true });
+                this.entries.set(spec.key, rec);
+            });
+        }
+        this.refreshAllContent();
+        if (!state.lowEnd && !document.hidden) this.start();
+    },
+
+    updateBackFace(key) {
+        const back = $(`lt-back-${key}`);
+        if (!back) return;
+
+        if (key === "blog") {
+            const posts = SITE_CONFIG.blogPosts || [];
+            if (!posts.length) return;
+            const post = posts[this.blogCursor % posts.length];
+            this.blogCursor++;
+            back.innerHTML = `
+                <span class="lt-back-kicker">${escapeHtml(t("ltLatestBlog"))} · ${escapeHtml(post.day)} ${escapeHtml(post.month)}</span>
+                <span class="lt-back-title">${escapeHtml(post.title)}</span>
+                <span class="lt-back-meta">${escapeHtml(post.readTime || "blog.html")} →</span>`;
+            return;
+        }
+
+        if (key === "games") {
+            const games = SITE_CONFIG.games || [];
+            if (!games.length) return;
+            const g = games[Math.floor(Math.random() * games.length)];
+            this.suggestedGameId = g.id;
+            back.innerHTML = `
+                <span class="lt-back-kicker">${escapeHtml(t("ltRandomGame"))} · #${escapeHtml(g.num || "00")}</span>
+                <span class="lt-back-title">${escapeHtml(g.icon || "🎮")} ${escapeHtml(g.title)}</span>
+                <span class="lt-back-meta">${escapeHtml(t("ltClickPlay"))}</span>`;
+            return;
+        }
+
+        if (key === "projects") {
+            const list = SITE_CONFIG.projects || [];
+            if (!list.length) return;
+            const p = list[this.projCursor % list.length];
+            this.projCursor++;
+            back.innerHTML = `
+                <span class="lt-back-kicker">${escapeHtml(t("ltFeaturedProj"))}</span>
+                <span class="lt-back-title">${escapeHtml(p.title)}</span>
+                <span class="lt-back-meta">${escapeHtml(p.year)} · ${escapeHtml(t("detailArrow"))}</span>`;
+            return;
+        }
+
+        if (key === "hadis") {
+            const h = FORTY_HADITHS[state.todayHadithIdx % FORTY_HADITHS.length];
+            if (!h) return;
+            back.innerHTML = `
+                <span class="lt-back-kicker">${escapeHtml(t("hadithOfDay"))}</span>
+                <span class="lt-back-title">${escapeHtml(h.title)}</span>
+                <span class="lt-back-meta">${escapeHtml(t("hadithWord"))} #${h.id} / 40</span>`;
+            return;
+        }
+
+        if (key === "setup") {
+            const slides = isEn()
+                ? [
+                    { k: "Main PC", title: "Ryzen 5 5500 · Arc B580 12GB", meta: "16GB DDR4 · Lian Li V100" },
+                    { k: "Garage", title: "Togg T10F V2 Long Range", meta: "Gemlik · LFP · 88.5 kWh" },
+                    { k: "Mobile Lab", title: "Xiaomi 14T Pro · Galaxy S8 TV", meta: "Rothko · Taiko · merlinx" }
+                ]
+                : [
+                    { k: "Ana PC", title: "Ryzen 5 5500 · Arc B580 12GB", meta: "16GB DDR4 · Lian Li V100" },
+                    { k: "Garaj", title: "Togg T10F V2 Long Range", meta: "Gemlik · LFP · 88.5 kWh" },
+                    { k: "Mobil Lab", title: "Xiaomi 14T Pro · Galaxy S8 TV", meta: "Rothko · Taiko · merlinx" }
+                ];
+            const sl = slides[this.setupCursor % slides.length];
+            this.setupCursor++;
+            back.innerHTML = `
+                <span class="lt-back-kicker">${escapeHtml(sl.k)}</span>
+                <span class="lt-back-title">${escapeHtml(sl.title)}</span>
+                <span class="lt-back-meta">${escapeHtml(sl.meta)}</span>`;
+        }
+    },
+
+    refreshAllContent() {
+        this.specs.forEach(s => this.updateBackFace(s.key));
+    },
+
+    scheduleNext(rec, delayOverride = null) {
+        if (rec.timerId) clearTimeout(rec.timerId);
+        if (!this.running || state.lowEnd || document.hidden) return;
+
+        const wait = delayOverride !== null
+            ? delayOverride
+            : (rec.flipped
+                ? this.rand(rec.spec.backMin, rec.spec.backMax)
+                : this.rand(rec.spec.frontMin, rec.spec.frontMax));
+
+        rec.timerId = setTimeout(() => {
+            if (!this.running || state.lowEnd || document.hidden) return;
+            if (state.view !== "home" || rec.hovered) {
+                this.scheduleNext(rec, 2200);
+                return;
+            }
+
+            rec.flipped = !rec.flipped;
+            rec.el.classList.toggle("is-flipped", rec.flipped);
+
+            if (!rec.flipped) {
+                setTimeout(() => {
+                    if (!rec.flipped) this.updateBackFace(rec.spec.key);
+                }, 760);
+            }
+            this.scheduleNext(rec);
+        }, wait);
+    },
+
+    start() {
+        if (state.lowEnd || document.hidden || this.running) return;
+        this.running = true;
+        this.entries.forEach(rec => {
+            this.scheduleNext(rec, rec.spec.initialDelay + this.rand(0, 900));
+        });
+    },
+
+    stop() {
+        this.running = false;
+        this.entries.forEach(rec => {
+            if (rec.timerId) { clearTimeout(rec.timerId); rec.timerId = null; }
+            rec.flipped = false;
+            rec.el.classList.remove("is-flipped");
+        });
+    }
+};
+
+function handleGamesLiveTileClick() {
+    const rec = liveTilesEngine.entries.get("games");
+    if (rec?.flipped && liveTilesEngine.suggestedGameId) {
+        openGameModal(liveTilesEngine.suggestedGameId);
+        return;
+    }
+    navigateTo("games");
+}
+
+/* =====================================================================
    3. DİL DEĞİŞTİRME, LOW-END MODU, TEMA, VURGU RENGİ & 3D METRO TILT
    ===================================================================== */
 function applyLanguage(lang, notify = true) {
@@ -437,6 +630,7 @@ function applyLanguage(lang, notify = true) {
     const langBadge = isEn() ? "🌐 EN" : "🌐 TR";
     if ($("lang-pill-text")) $("lang-pill-text").textContent = langBadge;
     if ($("sub-lang-label")) $("sub-lang-label").textContent = langBadge;
+    if ($("about-tile-summary")) $("about-tile-summary").textContent = t("aboutTileSummary");
 
     const lowLbl = state.lowEnd ? t("lowOn") : t("lowOff");
     if ($("lowend-pill-text")) $("lowend-pill-text").textContent = lowLbl;
@@ -452,6 +646,7 @@ function applyLanguage(lang, notify = true) {
     loadNptechVideosTile();
     loadGitHubTile();
     updateHomeSysInfoTile();
+    liveTilesEngine.refreshAllContent();
 
     if (state.view !== "home") renderSubpage();
     if (state.charmsOpen) renderCharmsPane();
@@ -465,9 +660,11 @@ function setLowEndMode(enabled, notify = true) {
     document.body.classList.toggle("low-end", state.lowEnd);
     if (state.lowEnd) {
         canvasEngine.stop();
+        liveTilesEngine.stop();
         $$("[data-metro-tilt]").forEach(el => { el.style.transform = ""; });
     } else {
         canvasEngine.start();
+        liveTilesEngine.start();
     }
 
     const label = state.lowEnd ? t("lowOn") : t("lowOff");
@@ -489,6 +686,7 @@ function applyTheme(id, notify = true) {
     if ($("theme-pill-text")) $("theme-pill-text").textContent = found.short;
     if ($("sub-theme-label")) $("sub-theme-label").textContent = found.short;
     store.set("seb_visual_theme", found.id);
+    renderWeatherTile();
     if (state.charmsOpen) renderCharmsPane();
     if (notify) showToast(`${t("toastTheme")} ${found.name}`);
 }
@@ -519,8 +717,8 @@ function bindMetroTilt(root = document) {
             pending = false;
             if (state.lowEnd) return;
             const r = tile.getBoundingClientRect();
-            const rx = (0.5 - (ly - r.top) / r.height) * 8;
-            const ry = ((lx - r.left) / r.width - 0.5) * 8;
+            const rx = (0.5 - (ly - r.top) / r.height) * 7;
+            const ry = ((lx - r.left) / r.width - 0.5) * 7;
             tile.style.transform = `perspective(800px) rotateX(${rx.toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg) scale(1.005)`;
         };
         tile.addEventListener("mousemove", e => {
@@ -567,6 +765,7 @@ function updateLiveClock() {
         if (doyIdx !== state.todayHadithIdx) {
             state.todayHadithIdx = state.hadithIdx = doyIdx;
             renderHadithTile();
+            liveTilesEngine.updateBackFace("hadis");
         }
     } catch {}
 }
@@ -589,7 +788,7 @@ function resetHadithToToday() {
 }
 
 /* =====================================================================
-   5. SOSYAL KUTUCUKLAR, WHOAMI, KAYSERİ HAVA DURUMU, YT MUSIC, GITHUB & NPTECH
+   5. SOSYAL KUTUCUKLAR, WHOAMI, KAYSERİ HAVA & ATMOSFER, YT MUSIC, GITHUB
    ===================================================================== */
 function renderSocialTiles(containerId) {
     const el = $(containerId);
@@ -668,6 +867,42 @@ function wmoToEmoji(code, isDay = 1) {
     if (code >= 71 && code <= 86) return "❄️";
     if (code >= 95) return "⛈️";
     return "🌤️";
+}
+
+function getKayseriAtmosphere() {
+    const code = Number(state.weatherCode || 0);
+    const isDay = Number(state.weatherIsDay ?? 1);
+    const temp = Math.round(state.weatherTemp);
+    const en = isEn();
+
+    let themeId = "harmony";
+    let mood = en ? "Crisp Kayseri Sky" : "Kayseri Ferah Hava";
+    let icon = "🌤️";
+
+    if (code >= 95 || code === 45 || code === 48) {
+        themeId = "gothic";
+        mood = code >= 95 ? (en ? "Stormy Mood" : "Fırtınalı Atmosfer") : (en ? "Misty & Foggy" : "Sisli & Puslu");
+        icon = code >= 95 ? "⛈️" : "🌫️";
+    } else if ((code >= 71 && code <= 86) || (code >= 51 && code <= 67)) {
+        themeId = "aurora";
+        mood = code >= 71 ? (en ? "Snowy Kayseri" : "Karlı Kayseri") : (en ? "Rainy Breeze" : "Yağışlı Hava");
+        icon = code >= 71 ? "❄️" : "🌧️";
+    } else if (!isDay) {
+        themeId = "twilight";
+        mood = en ? "Kayseri Night" : "Kayseri Gecesi";
+        icon = "🌙";
+    } else if (code === 0 && temp >= 18) {
+        themeId = "meadow";
+        mood = en ? "Warm & Sunny" : "Güneşli & Sıcak";
+        icon = "☀️";
+    } else if (code === 3) {
+        themeId = "lale";
+        mood = en ? "Calm Overcast" : "Sakin & Bulutlu";
+        icon = "☁️";
+    }
+
+    const themeObj = VISUAL_THEMES.find(th => th.id === themeId) || VISUAL_THEMES[0];
+    return { icon, mood, themeId: themeObj.id, themeName: themeObj.short };
 }
 
 function buildWeatherAdvice() {
@@ -752,6 +987,21 @@ function renderWeatherTile() {
     if ($("weather-desc-big")) $("weather-desc-big").textContent = state.weatherDesc;
     if ($("weather-meta-line")) $("weather-meta-line").textContent = `${t("feelsLbl")} ${feels}°C · ${t("dailyLbl")} ${minT}°C / ${maxT}°C`;
     if ($("weather-sub-line")) $("weather-sub-line").textContent = `${t("humLbl")} ${hum}% · ${t("windLbl")} ${wind} ${t("windUnit")} · ${t("rainLbl")} ${rain}%`;
+
+    const atmoSlot = $("weather-atmosphere-slot");
+    if (atmoSlot) {
+        const atmo = getKayseriAtmosphere();
+        const isMatched = state.theme === atmo.themeId;
+        atmoSlot.classList.remove("hidden");
+        atmoSlot.innerHTML = `
+            <span class="weather-atmo-label">
+                <span aria-hidden="true">${atmo.icon}</span>
+                <span class="weather-atmo-chip">${escapeHtml(atmo.mood)}</span>
+            </span>
+            ${isMatched
+                ? `<span class="mono-sm" style="color:#a7f3d0;">${escapeHtml(t("atmoMatched"))}</span>`
+                : `<button type="button" class="metro-flat-btn xs" onclick="applyTheme('${escapeHtml(atmo.themeId)}',true)">🎨 ${escapeHtml(t("atmoApplyBtn"))} ${escapeHtml(atmo.themeName)}</button>`}`;
+    }
 
     const slot = $("weather-advice-slot");
     if (slot) {
@@ -934,6 +1184,7 @@ function refreshAllLiveTiles() {
     loadNptechVideosTile();
     fetchVisitorIpInfo(false);
     measureVisitorLatency(false);
+    liveTilesEngine.refreshAllContent();
     showToast(t("toastRefreshed"));
 }
 
@@ -1239,7 +1490,7 @@ const SUBPAGE_RENDERERS = {
                     ${cats.map(cat => `<button type="button" class="filter-pill ${activeCat === cat ? "active" : ""}" onclick="state.gameCat='${escapeHtml(cat)}';renderSubpage()">${escapeHtml(gameCatLabel(cat))}</button>`).join("")}
                 </div>
                 <div style="flex:1;min-width:210px;max-width:300px;">
-                    <input type="search" class="metro-input" placeholder="${en ? "Search 51 games..." : "51 oyun içinde ara..."}" value="${escapeHtml(state.gameSearch)}" oninput="state.gameSearch=this.value;renderGamesGridOnly()">
+                    <input type="search" class="metro-input" placeholder="${en ? `Search ${games.length} games...` : `${games.length} oyun içinde ara...`}" value="${escapeHtml(state.gameSearch)}" oninput="state.gameSearch=this.value;renderGamesGridOnly()">
                 </div>
             </div>
             <div class="three-col-grid" id="games-list-grid"></div>`;
@@ -1258,8 +1509,8 @@ const SUBPAGE_RENDERERS = {
                     <h2 class="metro-display" style="font-size:1.9rem;">${escapeHtml(SITE_CONFIG.fullName)} <span style="font-size:1.05rem;opacity:0.68;">(NeonPeekr)</span></h2>
                     <div class="mono-sm" style="color:var(--accent-light);font-size:0.77rem;">@${escapeHtml(SITE_CONFIG.username)} · ${en ? `${age} y/o · Male · Turkish · Muslim` : `${age} yaşında · Erkek · Türk · Müslüman`} · ${escapeHtml(SITE_CONFIG.district)}</div>
                     <p style="font-size:0.86rem;color:var(--text-secondary);margin-top:5px;">${en
-                        ? "Mechanical Engineering student at Erciyes University. 3D CAD & Fiber Laser CNC Specialist, Hardware Modder, and @nptechtr Content Creator."
-                        : "Erciyes Üniversitesi Makine Mühendisliği öğrencisi. 3D CAD & Fiber Lazer CNC Uzmanı, Donanım Modifikasyonu ve @nptechtr İçerik Üreticisi."}</p>
+                        ? "Mechanical Engineering student at Erciyes University. Focused on 3D CAD, PC hardware, Android modding, and @nptechtr content."
+                        : "Erciyes Üniversitesi Makine Mühendisliği öğrencisi. 3D CAD, bilgisayar donanımı, Android modifikasyonu ve @nptechtr içerikleri üzerine çalışıyor."}</p>
                 </div>
             </div>
             <div class="two-col-grid">
@@ -1323,10 +1574,10 @@ const SUBPAGE_RENDERERS = {
                     <div class="info-stripe"><strong>${en ? "Smartwatches:" : "Akıllı Saatler:"}</strong> Redmi Watch 6 Active (Daily) · Haylou Solar</div>
                 </div>
                 <div class="metro-panel">
-                    <div class="metro-micro">${en ? "Workshop & Fabrication" : "Atölye & Üretim"}</div>
-                    <h3 class="metro-section-head" style="font-size:1.34rem;">${en ? "cad / cam & electronics" : "cad / cam & elektronik"}</h3>
-                    <div class="info-stripe"><strong>CNC:</strong> 3 kW Bodor Fiber Laser (Bodor Thinker · N2/O2 · ${en ? "up to 15 mm stainless & mild steel" : "15 mm'ye kadar paslanmaz ve siyah sac"})</div>
-                    <div class="info-stripe"><strong>${en ? "CAD & Bench:" : "CAD & Tezgâh:"}</strong> SolidWorks, AutoCAD (2007–2026), ${en ? "soldering iron, multimeter, copper shims & thermal pads" : "havya, multimetre, bakır şim & termal ped"}</div>
+                    <div class="metro-micro">${en ? "CAD & Electronics Bench" : "CAD & Elektronik Tezgâhı"}</div>
+                    <h3 class="metro-section-head" style="font-size:1.34rem;">${en ? "software & tools" : "yazılım & ekipman"}</h3>
+                    <div class="info-stripe"><strong>3D CAD:</strong> SolidWorks (2017–2026), AutoCAD (2007–2026), FreeCAD · STEP / DWG / DXF</div>
+                    <div class="info-stripe"><strong>${en ? "Electronics Bench:" : "Elektronik Tezgâh:"}</strong> ${en ? "Soldering iron, multimeter, Arduino kits, copper shims & thermal pads" : "Havya, multimetre, Arduino kitleri, bakır şim & termal ped"}</div>
                 </div>
                 <div class="metro-panel">
                     <div class="metro-micro">${en ? "Automotive" : "Otomotiv"}</div>
@@ -1519,6 +1770,7 @@ const SUBPAGE_RENDERERS = {
         const am = SITE_CONFIG.androidModding || DEFAULT_SITE_CONFIG.androidModding;
         const cats = ["Tümü", ...new Set(am.commands.map(cmd => cmd.cat))];
         const activeCat = state.androidCmdCat || "Tümü";
+        const archive = am.deviceArchive || [];
 
         c.innerHTML = `
             <div class="metro-panel row-between flex-wrap" style="margin-bottom:18px;border-left:4px solid #10b981;gap:12px;">
@@ -1529,6 +1781,32 @@ const SUBPAGE_RENDERERS = {
                     </div>
                 </div>
                 <button type="button" class="metro-btn-primary" style="padding:8px 14px;font-size:0.8rem;" onclick="inspectConnectedAndroidUsb()">${en ? "Scan USB Device" : "USB Cihazı Tara"}</button>
+            </div>
+
+            <h3 class="metro-section-head" style="font-size:1.36rem;">${en ? "device & mod archive notes" : "cihaz & mod arşivi notları"}</h3>
+            <div class="two-col-grid" style="margin-bottom:22px;">
+                ${archive.map((dev, idx) => `
+                    <article class="mod-archive-card">
+                        <div>
+                            <div class="row-between flex-wrap" style="margin-bottom:6px;">
+                                <strong style="font-size:0.98rem;">${escapeHtml(dev.device)}</strong>
+                                <span class="source-badge live">${escapeHtml(dev.codename)}</span>
+                            </div>
+                            <div class="mono-sm" style="color:var(--accent-light);margin-bottom:8px;">${escapeHtml(dev.rom)} · ${escapeHtml(dev.status)}</div>
+                            <div class="tag-wrap" style="margin:0 0 9px;">${(dev.modules || []).map(m => `<span class="tech-tag">${escapeHtml(m)}</span>`).join("")}</div>
+                            <ul class="mod-steps-list">
+                                ${(dev.steps || []).map(st => `<li>${escapeHtml(st)}</li>`).join("")}
+                            </ul>
+                        </div>
+                        ${dev.quickCmd ? `
+                            <div class="divider-top" style="padding-top:9px;">
+                                <div class="mono-sm" style="background:rgba(0,0,0,0.42);border:1px solid rgba(255,255,255,0.16);padding:6px 8px;color:var(--accent-light);word-break:break-all;margin-bottom:7px;">${escapeHtml(dev.quickCmd)}</div>
+                                <div class="row-between">
+                                    <span class="mono-sm" style="opacity:0.65;">${en ? "Quick Setup Command" : "Hızlı Kurulum Komutu"}</span>
+                                    <button type="button" class="metro-btn-primary" style="padding:5px 11px;font-size:0.74rem;" onclick="copyDeviceArchiveCmd(${idx})">${en ? "Copy Command" : "Komutu Kopyala"}</button>
+                                </div>
+                            </div>` : ""}
+                    </article>`).join("")}
             </div>
 
             <h3 class="metro-section-head" style="font-size:1.36rem;">${en ? "platform-tools, root & modding utilities" : "güncel platform-tools, root & modlama araçları"}</h3>
@@ -1582,8 +1860,10 @@ const SUBPAGE_RENDERERS = {
 
     evcharge(c, crumb) {
         const en = isEn();
-        crumb.textContent = en ? "EV CHARGE & ENERGY CALCULATOR" : "EV ŞARJ & ENERJİ HESAPLAYICI";
+        crumb.textContent = en ? "EV CHARGE & TRIP COST" : "EV ŞARJ & YOL MALİYETİ";
         const presets = SITE_CONFIG.evPresets || DEFAULT_SITE_CONFIG.evPresets;
+        const cmp = SITE_CONFIG.evCompare || DEFAULT_SITE_CONFIG.evCompare;
+        const routes = cmp.routes || [];
 
         c.innerHTML = `
             <div class="metro-micro" style="margin-bottom:8px;">${en ? "Vehicle & Charger Presets" : "Hazır Araç & Şarj Profilleri"}</div>
@@ -1620,7 +1900,29 @@ const SUBPAGE_RENDERERS = {
                 </div>
             </div>
 
-            <div class="sys-grid" id="ev-results-grid"></div>`;
+            <div class="sys-grid" id="ev-results-grid"></div>
+
+            <h3 class="metro-section-head" style="font-size:1.36rem;margin-top:8px;">${en ? "trip cost comparator (solar / home ac / fast dc vs ice)" : "yol maliyeti karşılaştırıcı (solar / ev ac / hızlı dc vs yakıt)"}</h3>
+            <div class="filter-row">
+                ${routes.map(r => `<button type="button" class="filter-pill ${Number(state.evTripKm) === Number(r.km) ? "active" : ""}" onclick="state.evTripKm=${Number(r.km)};renderSubpage()">${escapeHtml(r.label)}</button>`).join("")}
+            </div>
+            <div class="metro-panel" style="border-left:4px solid #10b981;">
+                <div class="three-col-grid" style="gap:10px;">
+                    <div>
+                        <label class="mono-sm" style="opacity:0.8;">${en ? "Trip Distance (km)" : "Güzergâh Mesafesi (km)"}</label>
+                        <input type="number" step="10" min="10" max="5000" class="metro-input mono-sm" style="margin-top:4px;" value="${state.evTripKm}" oninput="state.evTripKm=Math.max(1,parseFloat(this.value)||0);recalcEvCompare()">
+                    </div>
+                    <div>
+                        <label class="mono-sm" style="opacity:0.8;">${en ? "ICE Fuel Consumption (L / 100 km)" : "Benzin/Dizel Tüketim (L / 100 km)"}</label>
+                        <input type="number" step="0.1" min="2" max="25" class="metro-input mono-sm" style="margin-top:4px;" value="${state.evIceL100}" oninput="state.evIceL100=Math.max(0.5,parseFloat(this.value)||0);recalcEvCompare()">
+                    </div>
+                    <div>
+                        <label class="mono-sm" style="opacity:0.8;">${en ? "Fuel Price (TL / L)" : "Akaryakıt Litre Fiyatı (TL / L)"}</label>
+                        <input type="number" step="0.5" min="1" max="200" class="metro-input mono-sm" style="margin-top:4px;" value="${state.evFuelPrice}" oninput="state.evFuelPrice=Math.max(0,parseFloat(this.value)||0);recalcEvCompare()">
+                    </div>
+                </div>
+            </div>
+            <div class="ev-compare-wrap" id="ev-compare-slot"></div>`;
         recalcEvCharge();
     },
 
@@ -1630,8 +1932,8 @@ const SUBPAGE_RENDERERS = {
         c.innerHTML = `
             <div class="metro-panel" style="margin-bottom:14px;border-left:4px solid var(--accent);">
                 <p style="font-size:0.88rem;color:var(--text-secondary);">${en
-                    ? "Reach out via the social & Steam tiles below or the quick message form for project collaborations, CAD/CNC inquiries, or tech questions."
-                    : "Proje işbirlikleri, CAD/CNC tasarım talepleri veya teknik sorularınız için aşağıdaki sosyal ağlar ve Steam kutucuklarından ya da hızlı mesaj formundan ulaşabilirsiniz."}</p>
+                    ? "Reach out via the social & Steam tiles below or the quick message form for project collaborations, 3D CAD ideas, or hardware/tech questions."
+                    : "Proje işbirlikleri, 3D CAD tasarımları veya donanım/teknik sorularınız için aşağıdaki sosyal ağlar ve Steam kutucuklarından ya da hızlı mesaj formundan ulaşabilirsiniz."}</p>
             </div>
             <div class="three-col-grid" id="contact-social-grid" style="margin-bottom:16px;"></div>
             <div class="row-center flex-wrap" style="margin-bottom:16px;">
@@ -1651,6 +1953,12 @@ const SUBPAGE_RENDERERS = {
         renderSocialTiles("contact-social-grid");
     }
 };
+
+function copyDeviceArchiveCmd(idx) {
+    const dev = (SITE_CONFIG.androidModding?.deviceArchive || [])[idx];
+    if (!dev?.quickCmd) return;
+    copyText(dev.quickCmd, isEn() ? `Command copied for ${dev.codename}!` : `${dev.codename} kurulum komutu kopyalandı!`);
+}
 
 function renderGamesGridOnly() {
     const grid = $("games-list-grid");
@@ -1688,19 +1996,22 @@ function renderGamesGridOnly() {
 function openGameModal(id) {
     const g = (SITE_CONFIG.games || []).find(item => item.id === id);
     if (!g) return;
+    state.gameCinema = false;
     const box = $("metro-modal-body");
     box.classList.add("game-modal");
+    box.classList.remove("cinema-mode");
     box.innerHTML = `
-        <div class="row-between flex-wrap" style="margin-bottom:10px;gap:8px;">
-            <div class="row-center min-w-0" style="gap:9px;">
-                <span style="font-size:1.3rem;">${escapeHtml(g.icon || "🎮")}</span>
+        <div class="row-between flex-wrap" style="margin-bottom:8px;gap:8px;">
+            <div class="row-center min-w-0" style="gap:8px;">
+                <span style="font-size:1.2rem;">${escapeHtml(g.icon || "🎮")}</span>
                 <div class="min-w-0">
                     <div class="metro-micro" style="color:var(--accent-light);">#${escapeHtml(g.num || "00")} · ${escapeHtml(gameCatLabel(g.cat))}</div>
-                    <h3 class="metro-display truncate" style="font-size:1.38rem;">${escapeHtml(g.title)}</h3>
+                    <h3 class="metro-display truncate" style="font-size:1.28rem;">${escapeHtml(g.title)}</h3>
                 </div>
             </div>
             <div class="row-center flex-wrap" style="gap:6px;">
                 <button type="button" class="metro-flat-btn xs" onclick="reloadGameFrame()">${escapeHtml(t("reload"))}</button>
+                <button type="button" class="metro-flat-btn xs" id="game-cinema-btn" onclick="toggleGameCinemaMode()">⤢ ${escapeHtml(t("cinemaMode"))}</button>
                 <button type="button" class="metro-flat-btn xs" onclick="toggleGameFullscreen()">⛶ ${escapeHtml(t("fullscreen"))}</button>
                 <a href="${escapeHtml(g.path)}" target="_blank" rel="noopener noreferrer" class="metro-flat-btn xs">${escapeHtml(t("newTab"))}</a>
                 <button type="button" class="win-circle-btn sm" onclick="closeMetroModal()" aria-label="Close">✕</button>
@@ -1710,6 +2021,14 @@ function openGameModal(id) {
             <iframe id="game-stage-frame" class="game-stage-frame" src="${escapeHtml(g.path)}" title="${escapeHtml(g.title)}" allowfullscreen allow="autoplay; fullscreen; gamepad"></iframe>
         </div>`;
     $("metro-modal-backdrop").classList.remove("hidden");
+}
+
+function toggleGameCinemaMode() {
+    state.gameCinema = !state.gameCinema;
+    const box = $("metro-modal-body");
+    box?.classList.toggle("cinema-mode", state.gameCinema);
+    const btn = $("game-cinema-btn");
+    if (btn) btn.textContent = state.gameCinema ? `⤡ ${t("normalSize")}` : `⤢ ${t("cinemaMode")}`;
 }
 
 function reloadGameFrame() {
@@ -1773,6 +2092,92 @@ function recalcEvCharge() {
             <div class="sys-metric-val">${escapeHtml(item.val)}</div>
             <div class="sys-metric-sub">${escapeHtml(item.sub)}</div>
         </article>`).join("");
+
+    recalcEvCompare();
+}
+
+function recalcEvCompare() {
+    const slot = $("ev-compare-slot");
+    if (!slot) return;
+    const en = isEn();
+    const cmp = SITE_CONFIG.evCompare || DEFAULT_SITE_CONFIG.evCompare;
+
+    const km = Math.max(1, Number(state.evTripKm) || 320);
+    const evNetKwh = (km / 100) * Math.max(1, state.evConsumption || 16.8);
+    const eff = (state.evEfficiency || 92) / 100;
+    const evGridKwh = eff > 0 ? evNetKwh / eff : evNetKwh;
+    const fullRangeKm = state.evConsumption > 0 ? (state.evCapacity / state.evConsumption) * 100 : 450;
+    const estStops = Math.max(0, Math.ceil((km / Math.max(100, fullRangeKm * 0.8)) - 1));
+
+    const fmtDur = hrs => {
+        const hh = Math.floor(hrs);
+        const mm = Math.round((hrs - hh) * 60);
+        return en ? `${hh}h ${mm}m` : `${hh} sa ${mm} dk`;
+    };
+
+    const iceLiters = (km / 100) * Math.max(0.5, state.evIceL100 || 5.8);
+    const iceTotal = iceLiters * Math.max(0, state.evFuelPrice || 46.5);
+
+    const rows = [
+        {
+            name: en ? "Home Solar (6.6 kW)" : "Konut Solar (6.6 kW)",
+            energy: `${evGridKwh.toFixed(1)} kWh`,
+            total: evGridKwh * (cmp.solarTariffTl ?? 0.45),
+            time: fmtDur(evGridKwh / (cmp.solarKw || 6.6)),
+            best: true
+        },
+        {
+            name: en ? "Home AC Wallbox (11 kW)" : "Ev AC Wallbox (11 kW)",
+            energy: `${evGridKwh.toFixed(1)} kWh`,
+            total: evGridKwh * (cmp.homeAcTariffTl ?? 2.85),
+            time: fmtDur(evGridKwh / (cmp.homeAcKw || 11)),
+            best: false
+        },
+        {
+            name: en ? `Fast DC Station (${cmp.fastDcKw || 135} kW)` : `Hızlı DC İstasyon (${cmp.fastDcKw || 135} kW)`,
+            energy: `${evGridKwh.toFixed(1)} kWh`,
+            total: evGridKwh * (cmp.fastDcTariffTl ?? 9.90),
+            time: `${fmtDur(evGridKwh / (cmp.fastDcKw || 135))} · ${estStops} ${en ? "stop(s)" : "mola"}`,
+            best: false
+        },
+        {
+            name: en ? `ICE Vehicle (${state.evIceL100} L/100km)` : `İçten Yanmalı (${state.evIceL100} L/100km)`,
+            energy: `${iceLiters.toFixed(1)} L`,
+            total: iceTotal,
+            time: en ? "~5m refuel" : "~5 dk yakıt",
+            best: false
+        }
+    ];
+
+    const homeAcSaving = Math.max(0, iceTotal - rows[1].total);
+    const solarSaving = Math.max(0, iceTotal - rows[0].total);
+
+    slot.innerHTML = `
+        <table class="ev-compare-table">
+            <thead>
+                <tr>
+                    <th>${en ? "Energy Source" : "Enerji Kaynağı"} (${km} km)</th>
+                    <th>${en ? "Required" : "Gereken Enerji"}</th>
+                    <th>${en ? "Total Cost" : "Toplam Maliyet"}</th>
+                    <th>${en ? "Cost / km" : "TL / km"}</th>
+                    <th>${en ? "Charge / Stops" : "Süre / Mola"}</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${rows.map(r => `
+                    <tr class="${r.best ? "ev-best-row" : ""}">
+                        <td><strong>${escapeHtml(r.name)}</strong></td>
+                        <td class="mono-sm">${escapeHtml(r.energy)}</td>
+                        <td class="mono-cell">${r.total.toFixed(2)} TL</td>
+                        <td class="mono-sm">${(r.total / km).toFixed(2)} TL</td>
+                        <td class="mono-sm">${escapeHtml(r.time)}</td>
+                    </tr>`).join("")}
+            </tbody>
+        </table>
+        <div class="row-between flex-wrap" style="padding:10px 13px;background:rgba(16,185,129,0.12);border-top:1px solid rgba(255,255,255,0.12);font-size:0.8rem;">
+            <span>${en ? "Savings vs Fuel (Home AC):" : "Yakıta Göre Tasarruf (Ev AC):"} <strong style="color:#6ee7b7;">+${homeAcSaving.toFixed(0)} TL</strong></span>
+            <span>${en ? "Savings vs Fuel (Solar):" : "Yakıta Göre Tasarruf (Solar):"} <strong style="color:#6ee7b7;">+${solarSaving.toFixed(0)} TL</strong></span>
+        </div>`;
 }
 
 function updateAndroidCmdGrid() {
@@ -1890,7 +2295,7 @@ function openProjectModal(id) {
     const p = SITE_CONFIG.projects.find(item => item.id === id);
     if (!p) return;
     const box = $("metro-modal-body");
-    box.classList.remove("game-modal");
+    box.classList.remove("game-modal", "cinema-mode");
     box.innerHTML = `
         <div class="row-between" style="align-items:flex-start;margin-bottom:12px;">
             <div>
@@ -1912,9 +2317,10 @@ function closeMetroModal() {
     $("metro-modal-backdrop").classList.add("hidden");
     const box = $("metro-modal-body");
     if (box) {
-        box.classList.remove("game-modal");
+        box.classList.remove("game-modal", "cinema-mode");
         box.innerHTML = "";
     }
+    state.gameCinema = false;
     state.confirmResetStep = false;
 }
 
@@ -1924,7 +2330,7 @@ function closeMetroModal() {
 function openSearchCharm() {
     closeCharms();
     const box = $("metro-modal-body");
-    box.classList.remove("game-modal");
+    box.classList.remove("game-modal", "cinema-mode");
     $("metro-modal-backdrop").classList.remove("hidden");
     box.innerHTML = `
         <div class="row-between" style="margin-bottom:12px;">
@@ -1949,7 +2355,7 @@ function renderSearchResults() {
         slot.innerHTML = `
             <div class="metro-micro" style="margin-bottom:8px;">${escapeHtml(t("quickJumps"))}</div>
             <div class="two-col-grid" style="gap:8px;">
-                <button type="button" class="wp-choice-btn" onclick="closeMetroModal();navigateTo('games')"><span>🎮 ${escapeHtml(t("navGames"))} (51)</span></button>
+                <button type="button" class="wp-choice-btn" onclick="closeMetroModal();navigateTo('games')"><span>🎮 ${escapeHtml(t("navGames"))} (${(SITE_CONFIG.games || []).length})</span></button>
                 <button type="button" class="wp-choice-btn" onclick="closeMetroModal();navigateTo('toolkit')"><span>⬇ ${escapeHtml(t("navToolkit"))}</span></button>
                 <button type="button" class="wp-choice-btn" onclick="closeMetroModal();navigateTo('android')"><span>📱 ${escapeHtml(t("navAndroid"))}</span></button>
                 <button type="button" class="wp-choice-btn" onclick="closeMetroModal();navigateTo('evcharge')"><span>⚡ ${escapeHtml(t("navEv"))}</span></button>
@@ -2083,7 +2489,7 @@ function renderCharmsPane() {
    10. YÖNETİM PANELİ (ŞİFRE İPUCU YOKTUR · OYUNLAR, PROJE & FORMAT DAHİL)
    ===================================================================== */
 function openAdminModal() {
-    $("metro-modal-body")?.classList.remove("game-modal");
+    $("metro-modal-body")?.classList.remove("game-modal", "cinema-mode");
     $("metro-modal-backdrop").classList.remove("hidden");
     renderAdminModal();
 }
@@ -2185,7 +2591,7 @@ function renderAdminModal() {
                     <input id="ab-readtime" class="metro-input" style="width:130px;" placeholder="4 dk okuma" value="${escapeHtml(edit?.readTime || "4 dk okuma")}">
                 </div>
                 <input id="ab-excerpt" class="metro-input" required placeholder="Kısa özet" value="${escapeHtml(edit?.excerpt || "")}">
-                <textarea id="ab-content" rows="4" class="metro-textarea" required placeholder="Tam içerik (paragraflar için boş satır, alt başlık için ### kullanın)">${escapeHtml(edit?.content || "")}</textarea>
+                <textarea id="ab-content" rows="4" class="metro-textarea" required placeholder="Tam içerik (paragraflar için boş satır, alt başlık için ###, kod bloğu için \`\`\`bash ... \`\`\` kullanın)">${escapeHtml(edit?.content || "")}</textarea>
                 <div class="row-center">
                     <button type="submit" class="metro-btn-primary">${edit ? "Güncelle" : "Yazıyı Yayınla"}</button>
                     ${edit ? `<button type="button" class="metro-flat-btn" onclick="state.adminEditBlogId=null;state.uploadedBlogImage='';renderAdminModal()">İptal</button>` : ""}
@@ -2215,7 +2621,7 @@ function renderAdminModal() {
                     <select id="ap-cat" class="metro-select">${pCats.map(c => `<option value="${c.id}" ${edit?.category === c.id ? "selected" : ""}>${c.label}</option>`).join("")}</select>
                 </div>
                 <div class="two-col-grid" style="gap:8px;">
-                    <input id="ap-year" class="metro-input" required placeholder="Etiket / Yıl (ör. CAD & CNC İmalat)" value="${escapeHtml(edit?.year || "2026")}">
+                    <input id="ap-year" class="metro-input" required placeholder="Etiket / Yıl (ör. CAD & Tasarım)" value="${escapeHtml(edit?.year || "2026")}">
                     <input id="ap-link" class="metro-input" placeholder="Proje Bağlantısı (Opsiyonel https://...)" value="${escapeHtml(edit?.link || "")}">
                 </div>
                 <input id="ap-tech" class="metro-input" placeholder="Etiketler (virgülle ayır: SolidWorks, Python, Flask)" value="${escapeHtml((edit?.tech || []).join(", "))}">
@@ -2380,6 +2786,7 @@ function syncAllViewsAfterEdit(msg) {
     renderYtmTile();
     loadGitHubTile();
     loadNptechVideosTile();
+    liveTilesEngine.refreshAllContent();
     if (state.view !== "home") renderSubpage();
     renderAdminModal();
     if (msg) showToast(msg);
@@ -2797,9 +3204,17 @@ function initApp() {
     state.accentHex = store.get("seb_metro_accent", SITE_CONFIG.defaultAccent);
     state.todayHadithIdx = state.hadithIdx = (getIstanbulDayOfYear() - 1) % FORTY_HADITHS.length;
 
+    const cmp = SITE_CONFIG.evCompare || {};
+    state.evTripKm = cmp.defaultDistanceKm ?? 320;
+    state.evIceL100 = cmp.iceConsumptionPer100 ?? 5.8;
+    state.evFuelPrice = cmp.fuelPriceTl ?? 46.50;
+
     canvasEngine.init();
     applyTheme(state.theme, false);
     applyAccent(state.accentHex, false);
+
+    horizontalMetro.init();
+    liveTilesEngine.init();
 
     const savedLow = store.get("seb_low_end_mode");
     const autoLow = matchMedia?.("(prefers-reduced-motion: reduce)").matches ||
@@ -2807,7 +3222,6 @@ function initApp() {
         (navigator.deviceMemory && navigator.deviceMemory <= 4);
     setLowEndMode(savedLow === "1" || savedLow === "0" ? savedLow === "1" : Boolean(autoLow), false);
 
-    horizontalMetro.init();
     applyLanguage(state.lang, false);
     bindMetroTilt();
     syncRouteFromHash();
